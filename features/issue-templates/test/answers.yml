@@ -1,0 +1,18 @@
+module:
+  code: "R2.TEST"
+  titre: "Test issue-templates"
+  org_github: "IUTInfoAix-RTEST"
+  classroom_org: "IUTInfoAix-RTEST-2026"
+  codeowner: "@nedseb"
+  contact_email: "test-issue@example.org"
+tp:
+  numero: 99
+  titre_court: "tp-test-issues"
+  titre_complet: "TP test issue-templates"
+  description: "Fixture issue-templates"
+  classroom_link: "https://classroom.github.com/a/TESTISS"
+stack:
+  java_version: 25
+  features: [issue-templates]
+  packs: []
+  autograding_mode: tdd

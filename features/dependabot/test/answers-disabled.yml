@@ -1,0 +1,18 @@
+module:
+  code: "R2.TEST"
+  titre: "Test sans dependabot"
+  org_github: "IUTInfoAix-RTEST"
+  classroom_org: "IUTInfoAix-RTEST-2026"
+  codeowner: "@nedseb"
+  contact_email: "test@example.org"
+tp:
+  numero: 99
+  titre_court: "tp-test-nodep"
+  titre_complet: "TP test sans dependabot"
+  description: "Fixture sans dependabot"
+  classroom_link: "https://classroom.github.com/a/TESTNODEP"
+stack:
+  java_version: 25
+  features: []
+  packs: []
+  autograding_mode: tdd

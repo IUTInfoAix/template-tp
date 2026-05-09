@@ -17,9 +17,23 @@ _exclude:
   - ".git"
   # ----- Inclusion conditionnelle par feature (les expressions vides
   # n'excluent rien ; les non-vides excluent le path nommé). -----
+  # lint-quality
   - "{% if 'lint-quality' not in stack.features %}pmd-ruleset.xml{% endif %}"
   - "{% if 'lint-quality' not in stack.features %}scripts/lint-doc-coherence.sh{% endif %}"
   - "{% if 'lint-quality' not in stack.features %}.github/workflows/lint.yml{% endif %}"
+  # dependabot
+  - "{% if 'dependabot' not in stack.features %}.github/dependabot.yml{% endif %}"
+  # issue-templates (le dossier ENTIER + ses 3 fichiers)
+  - "{% if 'issue-templates' not in stack.features %}.github/ISSUE_TEMPLATE{% endif %}"
+  - "{% if 'issue-templates' not in stack.features %}.github/ISSUE_TEMPLATE/**{% endif %}"
+  # codeowners (default OFF, donc on l'exclut quand absent)
+  - "{% if 'codeowners' not in stack.features %}.github/CODEOWNERS{% endif %}"
+  # vscode-config (dossier entier)
+  - "{% if 'vscode-config' not in stack.features %}.vscode{% endif %}"
+  - "{% if 'vscode-config' not in stack.features %}.vscode/**{% endif %}"
+  # devcontainer
+  - "{% if 'devcontainer' not in stack.features %}.devcontainer{% endif %}"
+  - "{% if 'devcontainer' not in stack.features %}.devcontainer/**{% endif %}"
 
 _tasks:
   # Passer features+packs en arguments shell évite à validate_deps.py de
@@ -40,13 +54,15 @@ module:
     org_github: "IUTInfoAix-RXXX"
     classroom_org: "IUTInfoAix-RXXX-2026"
     codeowner: "@nedseb"
+    contact_email: "sebastien.nedjar@univ-amu.fr"
   help: |
     Métadonnées du module pédagogique (R2.02, R2.03...).
     Format YAML inline. Exemple :
       {code: "R2.03", titre: "Qualité de développement",
        org_github: "IUTInfoAix-R203",
        classroom_org: "IUTInfoAix-R203-2026",
-       codeowner: "@nedseb"}
+       codeowner: "@nedseb",
+       contact_email: "sebastien.nedjar@univ-amu.fr"}
 
 tp:
   type: yaml

@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug l'application",
+            "request": "launch",
+            "mainClass": "fr.univ_amu.iut.App",
+            "preLaunchTask": "Build complet"
+        }
+    ]
+}
