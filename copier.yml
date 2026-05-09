@@ -34,6 +34,10 @@ _exclude:
   # devcontainer
   - "{% if 'devcontainer' not in stack.features %}.devcontainer{% endif %}"
   - "{% if 'devcontainer' not in stack.features %}.devcontainer/**{% endif %}"
+  # ai-tutor (AGENTS.md générique + copilot-instructions.md ; le bloc
+  # TDD-PLAYBOOK doit rester synchronisé entre les deux, vérifié par bats)
+  - "{% if 'ai-tutor' not in stack.features %}AGENTS.md{% endif %}"
+  - "{% if 'ai-tutor' not in stack.features %}.github/copilot-instructions.md{% endif %}"
 
 _tasks:
   # Passer features+packs en arguments shell évite à validate_deps.py de

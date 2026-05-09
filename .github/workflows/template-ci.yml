@@ -27,6 +27,24 @@ permissions:
   contents: read
 
 jobs:
+  meta-checks:
+    name: meta / sync TDD-PLAYBOOK (.jinja)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bloc TDD-PLAYBOOK identique entre AGENTS.md.jinja et copilot-instructions.md.jinja
+        # Garde-fou : empêche un commit qui modifierait le bloc dans un seul
+        # des 2 fichiers. Doublon volontaire avec features/ai-tutor/test/
+        # validate.bats (qui teste sur le TP généré) - ici on sécurise la
+        # source AVANT génération, donc on échoue plus tôt.
+        run: |
+          AGENTS=.copier-template/AGENTS.md.jinja
+          COPILOT=.copier-template/.github/copilot-instructions.md.jinja
+          extract() {
+            sed -n '/<!-- TDD-PLAYBOOK-START -->/,/<!-- TDD-PLAYBOOK-END -->/p' "$1"
+          }
+          diff -u <(extract "$AGENTS") <(extract "$COPILOT")
+
   test-feature-isolated:
     name: feature/${{ matrix.feature }}
     runs-on: ubuntu-latest
@@ -40,6 +58,7 @@ jobs:
           - codeowners
           - vscode-config
           - devcontainer
+          - ai-tutor
     steps:
       - uses: actions/checkout@v4
 
