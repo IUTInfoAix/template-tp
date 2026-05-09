@@ -59,6 +59,8 @@ jobs:
           - vscode-config
           - devcontainer
           - ai-tutor
+          - maven-ci
+          - pre-commit-spotless
     steps:
       - uses: actions/checkout@v4
 
@@ -107,3 +109,31 @@ jobs:
         env:
           TP_DIR: /tmp/tp-no-${{ matrix.feature }}
         run: bats features/${{ matrix.feature }}/test/validate-disabled.bats
+
+  test-composition-spotless-with-lint:
+    name: composition / pre-commit-spotless + lint-quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-java@v5
+        with:
+          java-version: "25"
+          distribution: "zulu"
+      - name: Install copier + bats
+        run: |
+          pip install copier pyyaml
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq bats
+      - name: Generate TP with spotless + lint-quality
+        run: |
+          rm -rf /tmp/tp-spot-lint
+          copier copy --trust --defaults \
+            --data-file features/pre-commit-spotless/test/answers-with-lint.yml \
+            . /tmp/tp-spot-lint
+      - name: Bats — composition spotless + lint
+        env:
+          TP_DIR: /tmp/tp-spot-lint
+        run: bats features/pre-commit-spotless/test/validate-with-lint.bats

@@ -1,0 +1,30 @@
+# Build et tests Maven sur chaque push / PR.
+name: Java CI with Maven
+
+on:
+  - push
+  - pull_request
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up JDK {{ stack.java_version }}
+        uses: actions/setup-java@v5
+        with:
+          java-version: '{{ stack.java_version }}'
+          distribution: 'zulu'
+          cache: maven
+
+      - name: Run tests
+{%- if "javafx" in stack.packs %}
+        # JavaFX/TestFX nécessite un display X11 ; xvfb-run en simule un.
+        run: xvfb-run --auto-servernum ./mvnw -B verify --file pom.xml
+{%- else %}
+        run: ./mvnw -B verify --file pom.xml
+{%- endif %}

@@ -1,0 +1,12 @@
+name: maven-ci
+type: feature
+description: |
+  Workflow GitHub Actions de build/tests Maven sur chaque push et PR.
+  Java version paramétrée par stack.java_version, distribution Zulu,
+  cache Maven natif. Si pack javafx actif, lance via xvfb-run pour
+  TestFX headless.
+default: true
+requires: []
+conflicts: []
+files:
+  - .github/workflows/maven.yml

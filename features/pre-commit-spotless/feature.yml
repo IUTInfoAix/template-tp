@@ -1,0 +1,28 @@
+name: pre-commit-spotless
+type: feature
+description: |
+  Pre-commit hook silencieux qui reformate les fichiers Java stagés avec
+  Spotless (Google Java Format) avant le commit. Installé automatiquement
+  par git-build-hook-maven-plugin au premier `./mvnw` (config
+  `core.hooksPath=.githooks` posée silencieusement).
+
+  Le hook contient aussi une protection : empêche les commits sur la
+  branche `main` quand une branche `solution` existe localement (=
+  repo enseignant), pour éviter d'écraser le commit suivant
+  generate-student.
+
+  Si lint-quality est aussi actif, un bloc TEACHER-LINT est ajouté
+  conditionnellement au hook : il appelle lint-doc-coherence.sh et
+  pmd:check -Pquality-gate uniquement sur la branche solution
+  (strippé côté étudiant par generate-student).
+
+  Côté pom : injecte les plugins spotless-maven-plugin et
+  git-build-hook-maven-plugin (déjà conditionnel sur cette feature).
+default: true
+requires: []
+conflicts: []
+files:
+  - .githooks/pre-commit
+pom_inject:
+  - "plugin: spotless-maven-plugin"
+  - "plugin: git-build-hook-maven-plugin (configure core.hooksPath=.githooks)"

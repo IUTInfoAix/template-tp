@@ -11,18 +11,18 @@ import org.junit.jupiter.api.Test;
 /// Aix-Marseille" sur l'entrée standard.
 class AppTest {
 
-    @Test
-    void le_menu_affiche_le_titre_du_TP_et_le_repere_IUT() {
-        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-        PrintStream originalOut = System.out;
-        try {
-            System.setOut(new PrintStream(buffer));
-            App.afficherMenu(new LinkedHashMap<>());
-        } finally {
-            System.setOut(originalOut);
-        }
-        assertThat(buffer.toString())
-                .contains("{{ tp.titre_complet }}")
-                .contains("IUT Aix-Marseille");
+  @Test
+  void le_menu_affiche_le_titre_du_TP_et_le_repere_IUT() {
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    PrintStream originalOut = System.out;
+    try {
+      System.setOut(new PrintStream(buffer));
+      App.afficherMenu(new LinkedHashMap<>());
+    } finally {
+      System.setOut(originalOut);
     }
+    assertThat(buffer.toString())
+        .contains("{{ tp.titre_complet }}")
+        .contains("IUT Aix-Marseille");
+  }
 }
