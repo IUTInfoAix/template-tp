@@ -1,0 +1,14 @@
+name: issue-templates
+type: feature
+description: |
+  Templates GitHub Issues pour cadrer les questions et bugs des
+  étudiants : bug_report.yml (problèmes techniques), question.yml
+  (questions sur un exercice), config.yml (lien email vers
+  l'enseignant pour les questions hors-cadre).
+default: true
+requires: []
+conflicts: []
+files:
+  - .github/ISSUE_TEMPLATE/bug_report.yml
+  - .github/ISSUE_TEMPLATE/question.yml
+  - .github/ISSUE_TEMPLATE/config.yml

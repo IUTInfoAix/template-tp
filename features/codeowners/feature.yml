@@ -1,0 +1,14 @@
+name: codeowners
+type: feature
+description: |
+  Fichier .github/CODEOWNERS : auto-assigne le `module.codeowner` comme
+  reviewer sur toutes les PRs ouvertes dans le repo. Utile sur les TPs
+  avec plusieurs encadrants ou pour notifier l'enseignant des PRs
+  étudiantes (Group Assignment TP3).
+
+  default: false (les TPs solo R203 fonctionnent sans).
+default: false
+requires: []
+conflicts: []
+files:
+  - .github/CODEOWNERS

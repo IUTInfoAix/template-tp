@@ -33,7 +33,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        feature: [lint-quality]
+        feature:
+          - lint-quality
+          - dependabot
+          - issue-templates
+          - codeowners
+          - vscode-config
+          - devcontainer
     steps:
       - uses: actions/checkout@v4
 

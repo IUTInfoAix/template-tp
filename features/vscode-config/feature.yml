@@ -1,0 +1,17 @@
+name: vscode-config
+type: feature
+description: |
+  Configuration VS Code pour le TP : settings.json (Java LSP en mode
+  Standard, formatOnSave, autofetch git, autoSave onFocusChange,
+  Copilot Chat allow-list pour ./mvnw, git, gh pr, etc.), tasks.json
+  (Lancer / Tests / Build / Clean / Spotless), launch.json (Debug
+  fr.univ_amu.iut.App), extensions.json (Java pack + redhat.java +
+  XML + GitLens + Copilot Chat).
+default: true
+requires: []
+conflicts: []
+files:
+  - .vscode/settings.json
+  - .vscode/launch.json
+  - .vscode/tasks.json
+  - .vscode/extensions.json

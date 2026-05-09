@@ -1,0 +1,12 @@
+name: dependabot
+type: feature
+description: |
+  Configuration Dependabot pour mises à jour mensuelles automatiques
+  des dépendances Maven et des actions GitHub utilisées dans les
+  workflows. Les PR Dependabot atterrissent avec les labels
+  `dependencies` et `maven`/`github-actions`.
+default: true
+requires: []
+conflicts: []
+files:
+  - .github/dependabot.yml

@@ -1,0 +1,14 @@
+name: devcontainer
+type: feature
+description: |
+  Devcontainer pour GitHub Codespaces : image base Ubuntu, feature
+  Java (version paramétrée par stack.java_version, +-fx si pack
+  javafx actif), feature gh-cli, feature common-utils (zsh + ohmyzsh
+  + user vscode), onCreateCommand qui pré-build (mvnw test-compile)
+  et configure gh repo set-default. Bloc Dockerfile + feature
+  desktop-lite ajoutés conditionnellement quand pack javafx actif.
+default: true
+requires: []
+conflicts: []
+files:
+  - .devcontainer/devcontainer.json
