@@ -1,0 +1,24 @@
+name: ai-tutor
+type: feature
+description: |
+  Tuteur IA cadré pour TDD baby-steps :
+  - AGENTS.md (lu par Claude Code, Codex CLI, Aider, Cursor, Sourcegraph
+    Amp, etc. selon spec agents.md)
+  - .github/copilot-instructions.md (lu par GitHub Copilot Chat)
+
+  Les deux fichiers partagent un bloc commun délimité par les marqueurs
+  `<!-- TDD-PLAYBOOK-START -->` et `<!-- TDD-PLAYBOOK-END -->` qui doit
+  rester strictement identique. Cette synchronisation est vérifiée par
+  validate.bats (sur le TP généré) et par meta-sync.yml (sur les .jinja
+  du méta-template lui-même).
+
+  Le ton est tutoyé pour rester cohérent avec un.e tuteur.rice humain.e
+  en séance. Refus explicite de coder tant qu'un `@Disabled` n'est pas
+  retiré, escalade à 3 niveaux (concept → Javadoc → fake-it TDD), bloc
+  de code obligatoire pour toute commande shell.
+default: true
+requires: []
+conflicts: []
+files:
+  - AGENTS.md
+  - .github/copilot-instructions.md
