@@ -61,6 +61,7 @@ jobs:
           - ai-tutor
           - maven-ci
           - pre-commit-spotless
+          - autograding-classroom
     steps:
       - uses: actions/checkout@v4
 
