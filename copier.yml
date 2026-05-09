@@ -1,0 +1,85 @@
+# =====================================================================
+# copier.yml — méta-template TP IUT Aix-Marseille
+#
+# Génère un TP Java (+ optionnellement JavaFX) à partir d'une composition
+# de features modulaires. Voir TEMPLATE.md pour l'usage.
+# =====================================================================
+
+_subdirectory: .copier-template
+_templates_suffix: .jinja
+_min_copier_version: "9.0.0"
+
+_answers_file: .copier-answers.yml
+
+_exclude:
+  - "*.bak"
+  - "**/__pycache__"
+  - ".git"
+  # ----- Inclusion conditionnelle par feature (les expressions vides
+  # n'excluent rien ; les non-vides excluent le path nommé). -----
+  - "{% if 'lint-quality' not in stack.features %}pmd-ruleset.xml{% endif %}"
+  - "{% if 'lint-quality' not in stack.features %}scripts/lint-doc-coherence.sh{% endif %}"
+  - "{% if 'lint-quality' not in stack.features %}.github/workflows/lint.yml{% endif %}"
+
+_tasks:
+  # Passer features+packs en arguments shell évite à validate_deps.py de
+  # devoir relire le .copier-answers.yml (qui n'est pas garanti écrit
+  # avant les tasks).
+  - "python3 {{ _copier_conf.src_path }}/scripts/validate_deps.py --features '{{ stack.features|join(',') }}' --packs '{{ stack.packs|join(',') }}'"
+
+# =====================================================================
+# Questions interactives
+# =====================================================================
+
+module:
+  type: yaml
+  multiline: true
+  default:
+    code: "R2.XX"
+    titre: "À remplir"
+    org_github: "IUTInfoAix-RXXX"
+    classroom_org: "IUTInfoAix-RXXX-2026"
+    codeowner: "@nedseb"
+  help: |
+    Métadonnées du module pédagogique (R2.02, R2.03...).
+    Format YAML inline. Exemple :
+      {code: "R2.03", titre: "Qualité de développement",
+       org_github: "IUTInfoAix-R203",
+       classroom_org: "IUTInfoAix-R203-2026",
+       codeowner: "@nedseb"}
+
+tp:
+  type: yaml
+  multiline: true
+  default:
+    numero: 1
+    titre_court: "tp1"
+    titre_complet: "TP1"
+    description: "À remplir"
+    classroom_link: "https://classroom.github.com/a/XXXXXX"
+  help: |
+    Métadonnées du TP. titre_court devient l'artifactId Maven
+    (snake_case ou kebab, sans espaces).
+
+stack:
+  type: yaml
+  multiline: true
+  default:
+    java_version: 25
+    features:
+      - devcontainer
+      - vscode-config
+      - ai-tutor
+      - autograding-classroom
+      - generate-student
+      - lint-quality
+      - pre-commit-spotless
+      - maven-ci
+      - dependabot
+      - issue-templates
+    packs: []
+    autograding_mode: tdd
+  help: |
+    Composition technique du TP : version Java, features actives,
+    packs langage-spécifiques (ex: javafx), mode d'autograding (tdd
+    ou refactoring).

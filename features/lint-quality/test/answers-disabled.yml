@@ -1,0 +1,19 @@
+# Answers Copier pour générer un TP sans lint-quality (test de la
+# négation : on doit voir 0 trace de PMD/lint dans le TP généré).
+module:
+  code: "R2.TEST"
+  titre: "Test sans lint-quality"
+  org_github: "IUTInfoAix-RTEST"
+  classroom_org: "IUTInfoAix-RTEST-2026"
+  codeowner: "@nedseb"
+tp:
+  numero: 99
+  titre_court: "tp-test-no-lint"
+  titre_complet: "TP test sans lint-quality"
+  description: "Fixture de test pour la négation de lint-quality"
+  classroom_link: "https://classroom.github.com/a/TESTNOLINT"
+stack:
+  java_version: 25
+  features: []
+  packs: []
+  autograding_mode: tdd

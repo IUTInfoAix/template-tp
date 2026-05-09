@@ -1,0 +1,20 @@
+# Answers Copier pour générer un TP avec UNIQUEMENT lint-quality activé
+# (autres features désactivées pour vraiment isoler la feature).
+module:
+  code: "R2.TEST"
+  titre: "Test lint-quality"
+  org_github: "IUTInfoAix-RTEST"
+  classroom_org: "IUTInfoAix-RTEST-2026"
+  codeowner: "@nedseb"
+tp:
+  numero: 99
+  titre_court: "tp-test-lint"
+  titre_complet: "TP test lint-quality"
+  description: "Fixture de test pour la feature lint-quality"
+  classroom_link: "https://classroom.github.com/a/TESTLINT"
+stack:
+  java_version: 25
+  features:
+    - lint-quality
+  packs: []
+  autograding_mode: tdd

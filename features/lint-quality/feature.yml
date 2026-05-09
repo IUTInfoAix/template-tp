@@ -1,0 +1,16 @@
+name: lint-quality
+type: feature
+description: |
+  Linter PMD pédagogique (code smells alignés sur les refactorings de
+  Fowler) + script lint-doc-coherence.sh + workflow CI quality-gate
+  qui bloque sur la branche solution.
+default: true
+requires: []
+conflicts: []
+files:
+  - pmd-ruleset.xml
+  - scripts/lint-doc-coherence.sh
+  - .github/workflows/lint.yml
+pom_inject:
+  - "plugin: maven-pmd-plugin (phase verify)"
+  - "profile: quality-gate (failOnViolation=true)"

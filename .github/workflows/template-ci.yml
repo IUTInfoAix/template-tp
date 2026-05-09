@@ -1,0 +1,82 @@
+# =====================================================================
+# template-ci.yml — CI du méta-template TP
+#
+# Pour chaque feature et pack listés ci-dessous :
+#   1. génère un TP avec la composition `answers.yml` (et son pendant
+#      `answers-disabled.yml` quand il existe) ;
+#   2. lance les tests Bats `validate.bats` (ou `validate-disabled.bats`)
+#      qui exécutent l'idiomatique du langage cible (mvnw verify,
+#      pmd:check, xvfb-run, etc.).
+#
+# Ajouter une nouvelle feature/pack = ajouter une entrée dans la matrice
+# correspondante. Les compositions courantes (default, default-with-javafx,
+# barebone...) seront ajoutées dans un job séparé une fois plus de
+# features prêtes.
+# =====================================================================
+
+name: template-ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-feature-isolated:
+    name: feature/${{ matrix.feature }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        feature: [lint-quality]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: "25"
+          distribution: "zulu"
+          cache: maven
+
+      - name: Install copier + bats
+        run: |
+          pip install copier pyyaml
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq bats
+
+      - name: Generate TP with feature ${{ matrix.feature }} ENABLED
+        run: |
+          rm -rf /tmp/tp-${{ matrix.feature }}
+          copier copy --trust --defaults \
+            --data-file features/${{ matrix.feature }}/test/answers.yml \
+            . /tmp/tp-${{ matrix.feature }}
+
+      - name: Bats — feature enabled
+        env:
+          TP_DIR: /tmp/tp-${{ matrix.feature }}
+        run: bats features/${{ matrix.feature }}/test/validate.bats
+
+      - name: Generate TP with feature ${{ matrix.feature }} DISABLED
+        if: hashFiles(format('features/{0}/test/answers-disabled.yml', matrix.feature)) != ''
+        run: |
+          rm -rf /tmp/tp-no-${{ matrix.feature }}
+          copier copy --trust --defaults \
+            --data-file features/${{ matrix.feature }}/test/answers-disabled.yml \
+            . /tmp/tp-no-${{ matrix.feature }}
+
+      - name: Bats — feature disabled (négation)
+        if: hashFiles(format('features/{0}/test/validate-disabled.bats', matrix.feature)) != ''
+        env:
+          TP_DIR: /tmp/tp-no-${{ matrix.feature }}
+        run: bats features/${{ matrix.feature }}/test/validate-disabled.bats

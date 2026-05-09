@@ -1,0 +1,28 @@
+package fr.univ_amu.iut;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.LinkedHashMap;
+import org.junit.jupiter.api.Test;
+
+/// Smoke test du lanceur : vérifie que le menu affiche bien le titre du TP et le repère "IUT
+/// Aix-Marseille" sur l'entrée standard.
+class AppTest {
+
+    @Test
+    void le_menu_affiche_le_titre_du_TP_et_le_repere_IUT() {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        PrintStream originalOut = System.out;
+        try {
+            System.setOut(new PrintStream(buffer));
+            App.afficherMenu(new LinkedHashMap<>());
+        } finally {
+            System.setOut(originalOut);
+        }
+        assertThat(buffer.toString())
+                .contains("{{ tp.titre_complet }}")
+                .contains("IUT Aix-Marseille");
+    }
+}
