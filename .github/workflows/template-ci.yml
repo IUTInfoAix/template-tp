@@ -47,7 +47,9 @@ jobs:
         with:
           java-version: "25"
           distribution: "zulu"
-          cache: maven
+          # Pas de cache: maven : le repo méta-template n'a pas de pom.xml
+          # à la racine (le pom est un .jinja dans .copier-template/). Le
+          # cache Maven sert dans les TPs générés, pas ici.
 
       - name: Install copier + bats
         run: |
