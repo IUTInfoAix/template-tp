@@ -38,6 +38,12 @@ _exclude:
   # TDD-PLAYBOOK doit rester synchronisé entre les deux, vérifié par bats)
   - "{% if 'ai-tutor' not in stack.features %}AGENTS.md{% endif %}"
   - "{% if 'ai-tutor' not in stack.features %}.github/copilot-instructions.md{% endif %}"
+  # maven-ci
+  - "{% if 'maven-ci' not in stack.features %}.github/workflows/maven.yml{% endif %}"
+  # pre-commit-spotless (le hook est exclu si la feature n'est pas active ;
+  # le pom est déjà conditionnel pour les plugins spotless + git-build-hook)
+  - "{% if 'pre-commit-spotless' not in stack.features %}.githooks{% endif %}"
+  - "{% if 'pre-commit-spotless' not in stack.features %}.githooks/**{% endif %}"
 
 _tasks:
   # Passer features+packs en arguments shell évite à validate_deps.py de
