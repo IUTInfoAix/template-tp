@@ -46,7 +46,11 @@ jobs:
           diff -u <(extract "$AGENTS") <(extract "$COPILOT")
 
   test-core:
-    name: core (README, App, AppTest, mvnw)
+    # Aujourd'hui ce job ne valide que le README. Renommé en "core / README"
+    # pour ne pas survendre la couverture (suite Copilot review PR #24).
+    # Compléter ce bats pour couvrir App.java, AppTest.java, mvnw quand un
+    # cas concret de régression sur ces fichiers le justifiera.
+    name: core / README
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

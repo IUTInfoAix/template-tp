@@ -4,7 +4,10 @@ module:
   code: "R2.TEST"
   titre: "Test lint-quality"
   org_github: "IUTInfoAix-RTEST"
-  classroom_org: "IUTInfoAix-RTEST-2026"
+  # classroom_org volontairement DIFFÉRENT de "{org_github}-2026" pour
+  # détecter une régression où le README hardcoderait l'année (cf.
+  # Copilot review PR #25 commentaire #2).
+  classroom_org: "ClassroomOrg-Unique-2099"
   codeowner: "@nedseb"
   contact_email: "test@example.org"
 tp:
