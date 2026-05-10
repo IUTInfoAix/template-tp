@@ -44,6 +44,10 @@ _exclude:
   # le pom est déjà conditionnel pour les plugins spotless + git-build-hook)
   - "{% if 'pre-commit-spotless' not in stack.features %}.githooks{% endif %}"
   - "{% if 'pre-commit-spotless' not in stack.features %}.githooks/**{% endif %}"
+  # autograding-classroom (workflow + 2 scripts dans scripts/)
+  - "{% if 'autograding-classroom' not in stack.features %}.github/workflows/classroom.yml{% endif %}"
+  - "{% if 'autograding-classroom' not in stack.features %}scripts/grade-test.sh{% endif %}"
+  - "{% if 'autograding-classroom' not in stack.features %}scripts/update-autograding.sh{% endif %}"
 
 _tasks:
   # Passer features+packs en arguments shell évite à validate_deps.py de

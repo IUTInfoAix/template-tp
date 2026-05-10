@@ -1,0 +1,32 @@
+name: autograding-classroom
+type: feature
+description: |
+  Autograding GitHub Classroom : workflow .github/workflows/classroom.yml
+  + scripts d'outillage enseignant.
+
+  - scripts/grade-test.sh : helper qui grade UNE méthode de test
+    en lisant target/surefire-reports/TEST-<FQCN>.xml. Pas
+    d'invocation Maven (le workflow fait UN seul mvnw test
+    filtré). Un test @Disabled compte comme un échec (le
+    `<skipped/>` du XML).
+  - scripts/update-autograding.sh : régénère le bloc autograding du
+    workflow entre marqueurs #@@@AUTOGRADING-BEGIN@@@ /
+    #@@@AUTOGRADING-END@@@ en scannant les sous-paquets exerciceN
+    de src/test/. Deux modes auto-détectés : tdd (10/90 entre
+    compilation et exercices) ou refactoring (10/10/80, présence
+    de marqueurs /* --student-- */ dans src/).
+
+  Granularité : un step de grading par méthode de test (et non par
+  exercice), pour une note proportionnelle au nombre de tests
+  passés.
+
+  Les actions GitHub utilisées sont hébergées sous IUTInfoAix-R202/
+  (autograding-command-grader, autograding-grading-reporter) -
+  infrastructure partagée entre tous les modules IUT.
+default: true
+requires: []
+conflicts: []
+files:
+  - .github/workflows/classroom.yml
+  - scripts/grade-test.sh
+  - scripts/update-autograding.sh
