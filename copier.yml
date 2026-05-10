@@ -48,6 +48,9 @@ _exclude:
   - "{% if 'autograding-classroom' not in stack.features %}.github/workflows/classroom.yml{% endif %}"
   - "{% if 'autograding-classroom' not in stack.features %}scripts/grade-test.sh{% endif %}"
   - "{% if 'autograding-classroom' not in stack.features %}scripts/update-autograding.sh{% endif %}"
+  # generate-student (workflow + script dans scripts/)
+  - "{% if 'generate-student' not in stack.features %}.github/workflows/generate-student.yml{% endif %}"
+  - "{% if 'generate-student' not in stack.features %}scripts/generate-student.sh{% endif %}"
 
 _tasks:
   # Passer features+packs en arguments shell évite à validate_deps.py de

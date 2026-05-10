@@ -1,0 +1,18 @@
+module:
+  code: "R2.TEST"
+  titre: "Test generate-student"
+  org_github: "IUTInfoAix-RTEST"
+  classroom_org: "IUTInfoAix-RTEST-2026"
+  codeowner: "@nedseb"
+  contact_email: "test@example.org"
+tp:
+  numero: 99
+  titre_court: "tp-test-genstudent"
+  titre_complet: "TP test generate-student"
+  description: "Fixture generate-student"
+  classroom_link: "https://classroom.github.com/a/TESTGEN"
+stack:
+  java_version: 25
+  features: [generate-student]
+  packs: []
+  autograding_mode: tdd

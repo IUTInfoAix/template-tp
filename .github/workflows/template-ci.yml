@@ -62,6 +62,7 @@ jobs:
           - maven-ci
           - pre-commit-spotless
           - autograding-classroom
+          - generate-student
     steps:
       - uses: actions/checkout@v4
 
