@@ -28,8 +28,14 @@ setup() { cd "$TP_DIR"; }
 }
 
 @test "spotless : ./mvnw spotless:check passe sur le code minimal (idiomatique)" {
-    run ./mvnw -B -q -ntp spotless:check
-    [ "$status" -eq 0 ]
+    # Pas de -q : on veut voir l'output en cas d'échec CI (sinon impossible
+    # à debugger quand bats avale stdout). On valide juste l'exit code.
+    run ./mvnw -B -ntp spotless:check
+    if [ "$status" -ne 0 ]; then
+        echo "=== spotless:check FAILED ==="
+        echo "$output"
+        return 1
+    fi
 }
 
 @test "spotless : ./mvnw spotless:apply reformate un fichier mal formaté (idiomatique)" {
