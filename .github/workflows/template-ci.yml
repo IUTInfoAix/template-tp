@@ -112,6 +112,51 @@ jobs:
           TP_DIR: /tmp/tp-no-${{ matrix.feature }}
         run: bats features/${{ matrix.feature }}/test/validate-disabled.bats
 
+  test-pack-isolated:
+    name: pack/${{ matrix.pack }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pack:
+          - javafx
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-java@v5
+        with:
+          java-version: "25"
+          distribution: "zulu"
+      - name: Install copier + bats + xvfb (pour TestFX headless)
+        run: |
+          pip install copier pyyaml
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq bats xvfb
+      - name: Generate TP with pack ${{ matrix.pack }} ENABLED
+        run: |
+          rm -rf /tmp/tp-pack-${{ matrix.pack }}
+          copier copy --trust --defaults \
+            --data-file packs/${{ matrix.pack }}/test/answers.yml \
+            . /tmp/tp-pack-${{ matrix.pack }}
+      - name: Bats — pack enabled
+        env:
+          TP_DIR: /tmp/tp-pack-${{ matrix.pack }}
+        run: bats packs/${{ matrix.pack }}/test/validate.bats
+      - name: Generate TP with pack ${{ matrix.pack }} DISABLED
+        if: hashFiles(format('packs/{0}/test/answers-disabled.yml', matrix.pack)) != ''
+        run: |
+          rm -rf /tmp/tp-no-pack-${{ matrix.pack }}
+          copier copy --trust --defaults \
+            --data-file packs/${{ matrix.pack }}/test/answers-disabled.yml \
+            . /tmp/tp-no-pack-${{ matrix.pack }}
+      - name: Bats — pack disabled (négation)
+        if: hashFiles(format('packs/{0}/test/validate-disabled.bats', matrix.pack)) != ''
+        env:
+          TP_DIR: /tmp/tp-no-pack-${{ matrix.pack }}
+        run: bats packs/${{ matrix.pack }}/test/validate-disabled.bats
+
   test-composition-spotless-with-lint:
     name: composition / pre-commit-spotless + lint-quality
     runs-on: ubuntu-latest
