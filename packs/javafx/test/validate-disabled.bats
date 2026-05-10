@@ -13,6 +13,10 @@ setup() { cd "$TP_DIR"; }
     ! grep -q "javafx-maven-plugin" pom.xml
 }
 
+@test "no-javafx : module-info.java absent (pas de mode JPMS sans pack javafx)" {
+    [ ! -f src/main/java/module-info.java ]
+}
+
 @test "no-javafx : App.java reste sur la version console (Scanner)" {
     grep -q "import java.util.Scanner" src/main/java/fr/univ_amu/iut/App.java
     ! grep -q "extends Application" src/main/java/fr/univ_amu/iut/App.java
