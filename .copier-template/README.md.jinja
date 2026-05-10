@@ -81,12 +81,12 @@ La mise en place se fait en deux étapes : accepter le devoir sur GitHub Classro
 
 1. Cliquez sur le lien suivant :
 
-   👉 **{{CLASSROOM_LINK}}**
+   👉 **{{ tp.classroom_link }}**
 
 2. Si c'est votre première utilisation de GitHub Classroom, autorisez l'accès à votre compte GitHub.
 3. Sélectionnez votre nom dans la liste des étudiants (si elle apparaît) pour associer votre compte GitHub à votre identité dans le cours.
 4. Cliquez sur **"Accept this assignment"**.
-5. Attendez quelques secondes - GitHub crée automatiquement un dépôt à votre nom : `{{ module.org_github }}-2026/{{ tp.titre_court }}-votreLogin`.
+5. Attendez quelques secondes - GitHub crée automatiquement un dépôt à votre nom : `{{ module.classroom_org }}/{{ tp.titre_court }}-votreLogin`.
 6. Cliquez sur le lien du dépôt créé pour y accéder.
 
 ### Étape 2 - Ouvrir le projet dans GitHub Codespaces
@@ -97,7 +97,7 @@ Une fois sur la page de votre dépôt :
 2. Sélectionnez l'onglet **"Codespaces"**.
 3. Cliquez sur **"Create codespace on main"**.
 
-<img src="src/main/resources/assets/create_codespace_on_main.png" alt="Bouton Code -> Codespaces -> Create codespace on main" width="400"/>
+<img src=".github/assets/create_codespace_on_main.png" alt="Bouton Code -> Codespaces -> Create codespace on main" width="400"/>
 
 4. Attendez que l'environnement se construise (de 1 à 5 minutes la première fois).
 5. VS Code s'ouvre **dans votre navigateur** avec tout l'environnement pré-configuré :
@@ -107,7 +107,7 @@ Une fois sur la page de votre dépôt :
    - Copilot Chat (votre assistant IA pédagogique)
    - Toutes les extensions nécessaires
 
-![VS Code dans le navigateur après ouverture du Codespace](src/main/resources/assets/codespace_vscode.png)
+![VS Code dans le navigateur après ouverture du Codespace](.github/assets/codespace_vscode.png)
 
 > [!IMPORTANT]
 > Le Codespace est **personnel et persistant**. Quand vous fermez l'onglet, votre travail est sauvegardé. Pour reprendre, retournez sur votre dépôt GitHub -> **"Code"** -> **"Codespaces"** -> cliquez sur le Codespace existant (ne créez pas un nouveau à chaque fois).
@@ -116,7 +116,7 @@ Une fois sur la page de votre dépôt :
 
 Une fois le Codespace ouvert, ouvrez un terminal via le menu **Terminal -> New Terminal** :
 
-![Menu Terminal -> New Terminal](src/main/resources/assets/codespace_vscode_nouveau_terminal.png)
+![Menu Terminal -> New Terminal](.github/assets/codespace_vscode_nouveau_terminal.png)
 
 Puis lancez :
 
@@ -385,4 +385,4 @@ java -version
 
 ---
 
-*IUT d'Aix-Marseille - Département Informatique - {{YEAR}}*
+*IUT d'Aix-Marseille - Département Informatique*

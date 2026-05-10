@@ -56,8 +56,10 @@ _exclude:
   # AppTest.java basculent sur la version JavaFX via if/else.
   - "{% if 'javafx' not in stack.packs %}.devcontainer/Dockerfile{% endif %}"
   - "{% if 'javafx' not in stack.packs %}src/main/resources/DarkTheme.css{% endif %}"
-  - "{% if 'javafx' not in stack.packs %}src/main/resources/assets{% endif %}"
-  - "{% if 'javafx' not in stack.packs %}src/main/resources/assets/**{% endif %}"
+  # NB : les screenshots Codespace vivent désormais dans .github/assets/
+  # (toujours posés, référencés par le README) au lieu de
+  # src/main/resources/assets/ (qui était excluded hors pack javafx et
+  # produisait des liens cassés dans le README sur les TPs sans javafx).
 
 _tasks:
   # Passer features+packs en arguments shell évite à validate_deps.py de
