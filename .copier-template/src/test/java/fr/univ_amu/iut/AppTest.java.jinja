@@ -1,4 +1,4 @@
-{%- if "javafx" in stack.packs %}
+{%- if "javafx" in stack.packs -%}
 package fr.univ_amu.iut;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,7 +29,7 @@ class AppTest {
     assertThat(label.getText()).isEqualTo("JavaFX fonctionne !");
   }
 }
-{%- else %}
+{%- else -%}
 package fr.univ_amu.iut;
 
 import static org.assertj.core.api.Assertions.assertThat;
