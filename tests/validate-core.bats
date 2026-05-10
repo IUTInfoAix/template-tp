@@ -9,15 +9,15 @@ setup() { cd "$TP_DIR"; }
 }
 
 @test "core : README.md interpolé avec module.code et module.titre" {
-    grep -q "R2.TEST - Test lint-quality" README.md
+    grep -Fq "R2.TEST - Test lint-quality" README.md
 }
 
 @test "core : README.md interpolé avec contact_email" {
-    grep -q "mailto:test@example.org" README.md
+    grep -Fq "mailto:test@example.org" README.md
 }
 
 @test "core : README.md interpolé avec org_github + titre_court (lien issues)" {
-    grep -q "github.com/IUTInfoAix-RTEST/tp-test-lint/issues" README.md
+    grep -Fq "github.com/IUTInfoAix-RTEST/tp-test-lint/issues" README.md
 }
 
 @test "core : README.md interpolé avec tp.classroom_link" {
