@@ -25,13 +25,17 @@ setup() { cd "$TP_DIR"; }
     # au lieu de {{ tp.classroom_link }}) ne déclenchait aucun test, l'URL
     # apparaissait vide et tout passait. On vérifie maintenant l'URL exacte
     # injectée par la fixture lint-quality (TESTLINT).
-    grep -q "https://classroom.github.com/a/TESTLINT" README.md
+    grep -Fq "https://classroom.github.com/a/TESTLINT" README.md
 }
 
-@test "core : README.md interpolé avec module.classroom_org (et pas org_github-2026)" {
-    # Fix Copilot review PR #24 : avant on hardcodait '-2026'. Maintenant on
-    # utilise classroom_org de la fixture (IUTInfoAix-RTEST-2026).
-    grep -q "IUTInfoAix-RTEST-2026" README.md
+@test "core : README.md interpolé avec module.classroom_org (vraie variable, pas '{org_github}-2026' hardcodé)" {
+    # Fix Copilot review PR #24 + PR #25 : avant on hardcodait '-2026'.
+    # Pour que ce test attrape vraiment la régression, la fixture utilise
+    # une valeur de classroom_org volontairement DIFFÉRENTE de
+    # {org_github}-2026 (cf. lint-quality/test/answers.yml). Ainsi un
+    # hardcode '{{ module.org_github }}-2026' ne matcherait pas.
+    # grep -Fq pour traiter la chaîne comme littérale (pas regex).
+    grep -Fq "ClassroomOrg-Unique-2099" README.md
 }
 
 @test "core : README.md sans placeholder Jinja résiduel" {
