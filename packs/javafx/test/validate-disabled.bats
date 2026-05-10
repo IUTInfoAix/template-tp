@@ -26,8 +26,11 @@ setup() { cd "$TP_DIR"; }
     [ ! -f src/main/resources/DarkTheme.css ]
 }
 
-@test "no-javafx : assets/ absent" {
-    [ ! -d src/main/resources/assets ]
+@test "no-javafx : assets Codespace présents dans .github/assets/ (core, posés indépendamment du pack)" {
+    # Les screenshots Codespace ne dépendent pas du pack javafx (déplacés
+    # vers .github/assets/ après PR #25 pour éviter les liens cassés dans
+    # le README sur les TPs sans javafx).
+    [ -f .github/assets/codespace_vscode.png ]
 }
 
 @test "no-javafx : devcontainer.json sans desktop-lite, JDK 25-zulu (sans -fx)" {

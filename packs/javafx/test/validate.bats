@@ -41,9 +41,10 @@ setup() { cd "$TP_DIR"; }
     [ -f src/main/resources/DarkTheme.css ]
 }
 
-@test "javafx : assets/ présent (maquettes Codespace)" {
-    [ -d src/main/resources/assets ]
-    [ "$(ls -A src/main/resources/assets)" ]
+@test "core : screenshots Codespace présents dans .github/assets/ (déplacés depuis src/main/resources/assets/ pour rester accessibles aux TPs sans pack javafx)" {
+    [ -f .github/assets/codespace_vscode.png ]
+    [ -f .github/assets/codespace_vscode_nouveau_terminal.png ]
+    [ -f .github/assets/create_codespace_on_main.png ]
 }
 
 @test "javafx : devcontainer.json a feature desktop-lite + JDK 25-zulu-fx" {
