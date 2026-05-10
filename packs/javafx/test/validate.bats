@@ -20,6 +20,34 @@ setup() { cd "$TP_DIR"; }
     grep -q "javafx-maven-plugin" pom.xml
 }
 
+@test "javafx : module-info.java présent à la racine de src/main/java/" {
+    [ -f src/main/java/module-info.java ]
+}
+
+@test "javafx : module-info.java nommé 'tp<numero>.javafx' (cohérent avec mainClass pom et compatible avec la convention nom de module Java sans tirets)" {
+    # Le nom de module Java n'autorise pas les tirets, donc on dérive de
+    # tp.numero (entier) et pas de tp.titre_court (kebab-case). Pour la
+    # fixture javafx (numero: 99), le module est tp99.javafx.
+    grep -Fq "open module tp99.javafx" src/main/java/module-info.java
+}
+
+@test "javafx : module-info.java exporte fr.univ_amu.iut + requires les 5 modules JavaFX (alignés sur les 5 deps du pom)" {
+    grep -Fq "exports fr.univ_amu.iut;" src/main/java/module-info.java
+    grep -Fq "requires transitive javafx.base;" src/main/java/module-info.java
+    grep -Fq "requires transitive javafx.controls;" src/main/java/module-info.java
+    grep -Fq "requires transitive javafx.graphics;" src/main/java/module-info.java
+    grep -Fq "requires transitive javafx.fxml;" src/main/java/module-info.java
+    grep -Fq "requires transitive javafx.media;" src/main/java/module-info.java
+}
+
+@test "javafx : pom mainClass aligné avec module-info (cross-fichier)" {
+    # Suite Copilot review PR #26 : un test qui parle d'alignement doit
+    # vraiment vérifier l'alignement. Si module-info.java dit
+    # 'open module tp99.javafx', le mainClass du javafx-maven-plugin doit
+    # référencer ce même nom de module.
+    grep -Fq "tp99.javafx/fr.univ_amu.iut.App" pom.xml
+}
+
 @test "javafx : App.java basculé sur la version JavaFX (extends Application)" {
     grep -q "extends Application" src/main/java/fr/univ_amu/iut/App.java
     grep -q "javafx.application.Application" src/main/java/fr/univ_amu/iut/App.java

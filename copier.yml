@@ -56,6 +56,7 @@ _exclude:
   # AppTest.java basculent sur la version JavaFX via if/else.
   - "{% if 'javafx' not in stack.packs %}.devcontainer/Dockerfile{% endif %}"
   - "{% if 'javafx' not in stack.packs %}src/main/resources/DarkTheme.css{% endif %}"
+  - "{% if 'javafx' not in stack.packs %}src/main/java/module-info.java{% endif %}"
   # NB : les screenshots Codespace vivent désormais dans .github/assets/
   # (toujours posés, référencés par le README) au lieu de
   # src/main/resources/assets/ (qui était excluded hors pack javafx et
