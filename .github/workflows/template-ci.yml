@@ -45,6 +45,34 @@ jobs:
           }
           diff -u <(extract "$AGENTS") <(extract "$COPILOT")
 
+  test-core:
+    name: core (README, App, AppTest, mvnw)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-java@v5
+        with:
+          java-version: "25"
+          distribution: "zulu"
+      - name: Install copier + bats
+        run: |
+          pip install copier pyyaml
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq bats
+      - name: Generate TP (compose lint-quality - minimum vital)
+        run: |
+          rm -rf /tmp/tp-core
+          copier copy --trust --defaults \
+            --data-file features/lint-quality/test/answers.yml \
+            . /tmp/tp-core
+      - name: Bats — core
+        env:
+          TP_DIR: /tmp/tp-core
+        run: bats tests/validate-core.bats
+
   test-feature-isolated:
     name: feature/${{ matrix.feature }}
     runs-on: ubuntu-latest
