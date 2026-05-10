@@ -51,6 +51,13 @@ _exclude:
   # generate-student (workflow + script dans scripts/)
   - "{% if 'generate-student' not in stack.features %}.github/workflows/generate-student.yml{% endif %}"
   - "{% if 'generate-student' not in stack.features %}scripts/generate-student.sh{% endif %}"
+  # pack javafx : Dockerfile + ressources JavaFX. Le pom + devcontainer +
+  # maven.yml sont déjà conditionnels via Jinja blocs ; App.java +
+  # AppTest.java basculent sur la version JavaFX via if/else.
+  - "{% if 'javafx' not in stack.packs %}.devcontainer/Dockerfile{% endif %}"
+  - "{% if 'javafx' not in stack.packs %}src/main/resources/DarkTheme.css{% endif %}"
+  - "{% if 'javafx' not in stack.packs %}src/main/resources/assets{% endif %}"
+  - "{% if 'javafx' not in stack.packs %}src/main/resources/assets/**{% endif %}"
 
 _tasks:
   # Passer features+packs en arguments shell évite à validate_deps.py de

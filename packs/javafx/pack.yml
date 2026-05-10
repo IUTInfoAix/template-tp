@@ -1,0 +1,35 @@
+name: javafx
+type: pack
+description: |
+  Pack JavaFX 25 + TestFX pour les TP R2.02 (et autres modules IHM).
+
+  Inclut :
+  - 4 deps Maven : javafx-controls, javafx-fxml, javafx-graphics,
+    javafx-media (toutes en version 25, alignée sur stack.java_version).
+  - 2 deps test : testfx-core + testfx-junit5 (TestFX 4.0.18).
+  - Plugin javafx-maven-plugin pour `./mvnw javafx:run`.
+  - App.java basculé sur la version Application + Stage + Scene.
+  - AppTest.java basculé sur ApplicationExtension + FxRobot.
+  - .devcontainer/Dockerfile (libgtk + xvfb pour TestFX headless).
+  - src/main/resources/DarkTheme.css + assets/ (maquettes Codespace).
+  - .devcontainer/devcontainer.json : feature desktop-lite ajoutée +
+    JDK 25-zulu-fx au lieu de 25-zulu.
+  - .github/workflows/maven.yml : `xvfb-run --auto-servernum mvnw verify`
+    pour TestFX headless en CI.
+
+  Test idiomatique : `xvfb-run --auto-servernum ./mvnw verify` qui
+  exécute réellement TestFX sur le smoke test.
+default: false
+requires:
+  # Sans devcontainer, le développement JavaFX en Codespaces est
+  # impossible (xvfb manquant) - on protège l'utilisateur.
+  - devcontainer
+conflicts: []
+files:
+  - .devcontainer/Dockerfile
+  - src/main/resources/DarkTheme.css
+  - src/main/resources/assets/
+pom_inject:
+  - "deps: javafx-controls, javafx-fxml, javafx-graphics, javafx-media"
+  - "deps test: testfx-core, testfx-junit5"
+  - "plugin: javafx-maven-plugin"
