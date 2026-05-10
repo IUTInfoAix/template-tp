@@ -1,88 +1,90 @@
-# template-tp — méta-template TP IUT Aix-Marseille
+# template-tp
 
-Méta-template **Copier + Jinja2** pour scaffolder des TP Java (avec ou sans
-JavaFX) modulaires. Une seule source de vérité pour les modules R2.02
-(JavaFX), R2.03 (Java pur), R5.10 et autres modules futurs.
+[![template-ci](https://github.com/IUTInfoAix/template-tp/actions/workflows/template-ci.yml/badge.svg?branch=main)](https://github.com/IUTInfoAix/template-tp/actions/workflows/template-ci.yml)
+[![copier](https://img.shields.io/badge/scaffolding-Copier%209-3a8.svg)](https://copier.readthedocs.io/)
+[![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://www.azul.com/downloads/?package=jdk#zulu)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](.copier-template/LICENSE)
 
-## Usage rapide
+Méta-template **Copier + Jinja2 + Bats** pour scaffolder les TP Java (avec ou sans JavaFX) du Département Informatique de l'IUT d'Aix-Marseille. Une seule source de vérité pour les modules **R2.02** (JavaFX), **R2.03** (Java pur), et tous les modules futurs.
 
-```bash
-copier copy --trust gh:IUTInfoAix/template-tp ../tp-mon-tp
-```
+> **Remplace les anciens** [`IUTInfoAix-R202/template-tp-javafx`](https://github.com/IUTInfoAix-R202/template-tp-javafx) et [`IUTInfoAix-R203/template-tp-java`](https://github.com/IUTInfoAix-R203/template-tp-java) (archivés depuis 2026-05-10).
 
-Copier pose 3 questions (`module`, `tp`, `stack`), valide la composition via
-`scripts/validate_deps.py`, et génère le TP. Les versions ultérieures du
-méta-template peuvent être propagées dans le TP existant via :
+## Démarrage rapide
 
 ```bash
-cd ../tp-mon-tp
-copier update
+# Installer Copier (une seule fois)
+pipx install copier
+
+# Générer un TP
+copier copy --trust gh:IUTInfoAix/template-tp ../tpN
 ```
+
+Copier pose 3 questions interactives (`module`, `tp`, `stack`), valide la composition (`requires`/`conflicts`), et génère un TP prêt à pousser sous l'organisation Classroom.
+
+## Configuration en 30 secondes
+
+| Cas d'usage | `stack.features` | `stack.packs` |
+|---|---|---|
+| TP Java console autogradé (R2.03 standard) | défaut (10 features ON) | `[]` |
+| TP Java + JavaFX (R2.02 standard) | défaut + `desktop-lite` via le pack | `[javafx]` |
+| TP refactoring (caractérisation tests, --student-- markers) | défaut | `[]` + `stack.autograding_mode: refactoring` |
+| TP non autogradé (TP1 R203 style, Git tutoré) | défaut **moins** `autograding-classroom`, `generate-student` | `[]` |
+| TP barebone (juste un Maven + Junit) | `[devcontainer, vscode-config, maven-ci]` | `[]` |
+
+Pour ajouter une feature ou un pack à un TP existant : éditez `.copier-answers.yml` puis `copier update --skip-answered`. Le 3-way merge gère les conflits.
+
+## Status — features et packs livrés
+
+| Feature | Defaut | Inject pom | Tests bats |
+|---|---:|---:|---:|
+| [`devcontainer`](features/devcontainer/) | ✅ | – | 6 + 1 |
+| [`vscode-config`](features/vscode-config/) | ✅ | – | 7 + 1 |
+| [`ai-tutor`](features/ai-tutor/) | ✅ | – | 9 + 2 |
+| [`autograding-classroom`](features/autograding-classroom/) | ✅ | – | 12 + 3 |
+| [`generate-student`](features/generate-student/) | ✅ | – | 6 + 2 |
+| [`lint-quality`](features/lint-quality/) | ✅ | maven-pmd-plugin | 7 + 6 |
+| [`pre-commit-spotless`](features/pre-commit-spotless/) | ✅ | spotless + git-build-hook | 7 + 3 + 4 (composition) |
+| [`maven-ci`](features/maven-ci/) | ✅ | – | 8 + 1 |
+| [`dependabot`](features/dependabot/) | ✅ | – | 5 + 1 |
+| [`issue-templates`](features/issue-templates/) | ✅ | – | 4 + 1 |
+| [`codeowners`](features/codeowners/) | ⬜ | – | 3 + 1 |
+
+| Pack | Defaut | Inject pom | Tests bats |
+|---|---:|---:|---:|
+| [`javafx`](packs/javafx/) | ⬜ | 4 deps JavaFX + 2 TestFX + javafx-maven-plugin | 12 + 9 |
+
+**Total** : 14 jobs CI verts, ≈ 100 assertions bats idiomatiques (vraies commandes Maven, pas de form check).
+
+## Documentation
+
+- [**TEMPLATE.md**](TEMPLATE.md) — manuel d'usage détaillé : `copier copy/update`, recettes par module, format `.copier-answers.yml`, FAQ migration depuis les anciens templates.
+- [**CONTRIBUTING.md**](CONTRIBUTING.md) — guide pour ajouter une nouvelle feature ou un nouveau pack (squelette de fichiers, conventions de tests bats idiomatiques, intégration CI).
+- [**copier.yml**](copier.yml) — questions interactives + `_exclude` conditionnels + hook `_tasks` de validation.
 
 ## Architecture
 
 ```
-.copier-template/   templates Jinja2 (pom.xml.jinja, App.java.jinja, ...)
-copier.yml          questions interactives + _exclude conditionnels + _tasks
-features/<nom>/     feature.yml (metadata) + test/ (answers + Bats)
-packs/<nom>/        pack.yml (metadata) + test/ (answers + Bats)
-scripts/            validate_deps.py + outils méta
-.github/workflows/  template-ci.yml (matrice feature isolée + composition)
+template-tp/
+├── .copier-template/        templates Jinja2 (pom.xml.jinja, App.java.jinja, ...)
+├── copier.yml               questions + _exclude conditionnels + _tasks
+├── features/<nom>/          feature.yml (metadata) + test/ (answers + bats)
+├── packs/<nom>/             pack.yml (metadata) + test/ (answers + bats)
+├── scripts/
+│   └── validate_deps.py     hook _tasks : valide requires/conflicts
+└── .github/workflows/
+    └── template-ci.yml      matrice : meta-checks + feature isolée + pack isolé + composition
 ```
 
-Une **feature** est un comportement transversal (linter, devcontainer,
-tuteur IA, autograding...). Un **pack** est une stack technique cohérente
-(JavaFX). Chaque feature/pack a un `feature.yml`/`pack.yml` qui déclare
-ses `requires` et `conflicts`, et un dossier `test/` avec :
+Une **feature** = comportement transversal modulaire (linter, devcontainer, tuteur IA, autograding...).
+Un **pack** = stack technique cohérente (`javafx` pour l'instant ; futurs : `jpa`, `web-spring-boot`...).
 
-- `answers.yml` : composition activant la feature pour la tester en
-  isolation.
-- `validate.bats` : tests **idiomatiques** (`./mvnw verify`, `pmd:check`,
-  `xvfb-run mvnw verify` pour javafx, etc.) qui s'exécutent sur le TP
-  fraîchement généré.
-- `answers-disabled.yml` + `validate-disabled.bats` *(optionnels)* : tests
-  de négation pour vérifier que la feature désactivée ne fuit aucun
-  artefact dans le TP.
+## Prérequis
 
-## Status (Étape A — bootstrap)
+- **Copier 9+** (`pipx install copier`)
+- **Bats** pour lancer les tests en local (`apt install bats`)
+- **JDK 25** (Zulu recommandé via SDKMAN, `25-zulu-fx` si vous touchez au pack `javafx`)
+- **xvfb** côté Linux/CI pour les tests TestFX du pack `javafx` (`apt install xvfb`)
 
-| Feature | metadata | test/answers | test/validate.bats | CI |
-|---|---|---|---|---|
-| lint-quality | ✅ | ✅ + disabled | ✅ + disabled (7+6 tests) | ✅ |
-| devcontainer | 🔲 | 🔲 | 🔲 | 🔲 |
-| vscode-config | 🔲 | 🔲 | 🔲 | 🔲 |
-| ai-tutor | 🔲 | 🔲 | 🔲 | 🔲 |
-| autograding-classroom | 🔲 | 🔲 | 🔲 | 🔲 |
-| generate-student | 🔲 | 🔲 | 🔲 | 🔲 |
-| pre-commit-spotless | 🔲 *(pom déjà conditionnel)* | 🔲 | 🔲 | 🔲 |
-| maven-ci | 🔲 | 🔲 | 🔲 | 🔲 |
-| dependabot | 🔲 | 🔲 | 🔲 | 🔲 |
-| issue-templates | 🔲 | 🔲 | 🔲 | 🔲 |
-| codeowners | 🔲 | 🔲 | 🔲 | 🔲 |
+## Licence
 
-| Pack | metadata | test/answers | test/validate.bats | CI |
-|---|---|---|---|---|
-| javafx | 🔲 *(pom déjà conditionnel)* | 🔲 | 🔲 | 🔲 |
-
-Plan complet : [`actuellement-le-template-tp-javafx-est-jazzy-naur.md`](https://github.com/IUTInfoAix/R203/blob/main/.claude-plans/) (privé).
-
-## Développement local
-
-```bash
-# Tests d'une feature
-rm -rf /tmp/tp-lint
-copier copy --trust --defaults \
-  --data-file features/lint-quality/test/answers.yml \
-  . /tmp/tp-lint
-TP_DIR=/tmp/tp-lint bats features/lint-quality/test/validate.bats
-
-# Test négatif (feature désactivée)
-rm -rf /tmp/tp-no-lint
-copier copy --trust --defaults \
-  --data-file features/lint-quality/test/answers-disabled.yml \
-  . /tmp/tp-no-lint
-TP_DIR=/tmp/tp-no-lint bats features/lint-quality/test/validate-disabled.bats
-```
-
-Prérequis : `pipx install copier`, `apt install bats`, JDK 25 (Zulu fx
-recommandé pour rester compatible avec le pack javafx à venir).
+[MIT](.copier-template/LICENSE) — IUT d'Aix-Marseille - Département Informatique.
