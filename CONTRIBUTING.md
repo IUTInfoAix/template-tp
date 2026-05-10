@@ -346,7 +346,6 @@ Aucun conditionnel résiduel, aucun marqueur custom, aucun commentaire `<!-- gé
 
 ## Pour aller plus loin
 
-- Plan original (privé) : [`/home/nedjar/.claude/plans/actuellement-le-template-tp-javafx-est-jazzy-naur.md`](file:///home/nedjar/.claude/plans/actuellement-le-template-tp-javafx-est-jazzy-naur.md)
 - Documentation Copier : <https://copier.readthedocs.io/>
 - Documentation Bats : <https://bats-core.readthedocs.io/>
 - Templates Jinja2 : <https://jinja.palletsprojects.com/>
