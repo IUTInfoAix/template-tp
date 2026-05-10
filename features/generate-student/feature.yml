@@ -1,0 +1,31 @@
+name: generate-student
+type: feature
+description: |
+  Pipeline solution → main : régénère automatiquement la branche main
+  (version étudiante) à chaque push sur solution.
+
+  - scripts/generate-student.sh : transforme src/ depuis solution en
+    appliquant 3 marqueurs :
+      * `// --solution-only--` (en-tête fichier) : le fichier est
+        SUPPRIMÉ côté étudiant (classes utilitaires de référence).
+      * `// --solution-- ... // --end-solution--` : bloc SUPPRIMÉ côté
+        étudiant (implémentations à réécrire).
+      * `/* --student-- ... --end-student-- */` : bloc DÉCOMMENTÉ côté
+        étudiant (code de départ commenté inerte côté solution).
+    Ajoute aussi `@Disabled` sur les tests des sous-paquets exerciceN,
+    lance Spotless pour reformater, et vérifie que la version étudiante
+    compile.
+  - .github/workflows/generate-student.yml : workflow qui appelle le
+    script à chaque push sur solution puis pousse en orphan-commit sur
+    main. Si le secret CLASSROOM_SYNC_DISPATCH_TOKEN est configuré,
+    déclenche aussi sync.yml et sync-students.yml du repo
+    IUTInfoAix-R203/classroom-sync (multi-module R202+R203).
+
+  Mode par défaut : DRY-RUN (affiche les fichiers qui seraient modifiés
+  sans rien écrire). `--apply` pour appliquer.
+default: true
+requires: []
+conflicts: []
+files:
+  - .github/workflows/generate-student.yml
+  - scripts/generate-student.sh
