@@ -3,6 +3,7 @@
 [![template-ci](https://github.com/IUTInfoAix/template-tp/actions/workflows/template-ci.yml/badge.svg?branch=main)](https://github.com/IUTInfoAix/template-tp/actions/workflows/template-ci.yml)
 [![copier](https://img.shields.io/badge/scaffolding-Copier%209-3a8.svg)](https://copier.readthedocs.io/)
 [![Java](https://img.shields.io/badge/Java-25-orange.svg)](https://www.azul.com/downloads/?package=jdk#zulu)
+[![JUnit](https://img.shields.io/badge/JUnit-Jupiter%206-25A162.svg)](https://junit.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](.copier-template/LICENSE)
 
 Méta-template **Copier + Jinja2 + Bats** pour scaffolder les TP Java (avec ou sans JavaFX) du Département Informatique de l'IUT d'Aix-Marseille. Une seule source de vérité pour les modules **R2.02** (JavaFX), **R2.03** (Java pur), et tous les modules futurs.
@@ -29,13 +30,13 @@ Copier pose 3 questions interactives (`module`, `tp`, `stack`), valide la compos
 | TP Java + JavaFX (R2.02 standard) | défaut + `desktop-lite` via le pack | `[javafx]` |
 | TP refactoring (caractérisation tests, --student-- markers) | défaut | `[]` + `stack.autograding_mode: refactoring` |
 | TP non autogradé (TP1 R203 style, Git tutoré) | défaut **moins** `autograding-classroom`, `generate-student` | `[]` |
-| TP barebone (juste un Maven + Junit) | `[devcontainer, vscode-config, maven-ci]` | `[]` |
+| TP barebone (juste un Maven + JUnit) | `[devcontainer, vscode-config, maven-ci]` | `[]` |
 
 Pour ajouter une feature ou un pack à un TP existant : éditez `.copier-answers.yml` puis `copier update --skip-answered`. Le 3-way merge gère les conflits.
 
 ## Status — features et packs livrés
 
-| Feature | Defaut | Inject pom | Tests bats |
+| Feature | Défaut | Inject pom | Tests bats |
 |---|---:|---:|---:|
 | [`devcontainer`](features/devcontainer/) | ✅ | – | 6 + 1 |
 | [`vscode-config`](features/vscode-config/) | ✅ | – | 7 + 1 |
@@ -49,7 +50,7 @@ Pour ajouter une feature ou un pack à un TP existant : éditez `.copier-answers
 | [`issue-templates`](features/issue-templates/) | ✅ | – | 4 + 1 |
 | [`codeowners`](features/codeowners/) | ⬜ | – | 3 + 1 |
 
-| Pack | Defaut | Inject pom | Tests bats |
+| Pack | Défaut | Inject pom | Tests bats |
 |---|---:|---:|---:|
 | [`javafx`](packs/javafx/) | ⬜ | 4 deps JavaFX + 2 TestFX + javafx-maven-plugin | 12 + 9 |
 
