@@ -74,7 +74,7 @@ jobs:
       - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
         run: |
           rm -rf /tmp/template-source
-          git clone --no-local . /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
       - name: Generate TP (compose lint-quality - minimum vital)
         run: |
           rm -rf /tmp/tp-core
@@ -132,7 +132,7 @@ jobs:
       - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
         run: |
           rm -rf /tmp/template-source
-          git clone --no-local . /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
 
       - name: Generate TP with feature ${{ matrix.feature }} ENABLED
         run: |
@@ -188,7 +188,7 @@ jobs:
       - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
         run: |
           rm -rf /tmp/template-source
-          git clone --no-local . /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
       - name: Generate TP with pack ${{ matrix.pack }} ENABLED
         run: |
           rm -rf /tmp/tp-pack-${{ matrix.pack }}
@@ -235,7 +235,7 @@ jobs:
       - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
         run: |
           rm -rf /tmp/template-source
-          git clone --no-local . /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
       - name: Generate TP with spotless + lint-quality
         run: |
           rm -rf /tmp/tp-spot-lint
