@@ -86,6 +86,9 @@ jobs:
           TP_DIR: /tmp/tp-core
         run: bats tests/validate-core.bats
 
+      - name: Bats — skip_if_exists (re-copier ne doit pas écraser le contenu pédagogique)
+        run: bats tests/validate-skip-if-exists.bats
+
   test-feature-isolated:
     name: feature/${{ matrix.feature }}
     runs-on: ubuntu-latest

@@ -174,6 +174,68 @@ Le merge produit la version finale et signale les conflits dans les fichiers (st
 
 > **Toujours commiter le TP avant `copier update`**. Le merge peut écrire des fichiers sans demander, et `git diff` est votre seule sécurité.
 
+### Stratégie infra vs contenu pédagogique
+
+`copier.yml` déclare une liste `_skip_if_exists` qui distingue **fichiers d'infra** (toujours mis à jour) et **fichiers de contenu pédagogique** (générés à la création initiale, jamais écrasés ensuite). Conséquence : les `copier update` ne génèrent presque jamais de conflits 3-way merge sur le contenu — l'enseignant·e garde la maîtrise totale de ses énoncés.
+
+🛡️ **Préservés** (`_skip_if_exists`) :
+- `README.md` (objectifs Bloom, prérequis, sections exercices)
+- `src/main/java/.../exerciceN/**`, `src/test/java/.../exerciceN/**`, `src/main/java/.../bonusN/**`, `src/test/java/.../bonusN/**`
+- `src/main/resources/exerciceN/**`, `src/test/resources/exerciceN/**` (incluant les `*.approved.txt` ApprovalTests)
+- `src/main/java/.../App.java` et `src/test/java/.../AppTest.java` (l'enseignant·e ajoute des entrées au menu console au fil des exercices)
+
+🔄 **Mis à jour à chaque `copier update`** (et donc à utiliser dans une PR à part si l'on veut éviter de perdre des customisations) :
+- Maven Wrapper, `.gitignore`, `.gitattributes`, `LICENSE`
+- Tous les workflows `.github/workflows/*` (et `update-autograding.sh` est ré-exécuté automatiquement à la fin pour régénérer le bloc `#@@@AUTOGRADING@@@` selon les exercices détectés)
+- `.devcontainer/`, `.vscode/`, `.githooks/`, `AGENTS.md`, `.github/copilot-instructions.md`
+- Scripts d'infra : `scripts/{grade-test,update-autograding,lint-doc-coherence,generate-student}.sh`
+- `pom.xml` (volontairement hors `_skip_if_exists` : on veut que les bumps de plugins se propagent ; les rares deps spécifiques d'un TP sont à ré-appliquer manuellement après update)
+
+### Adopter un TP créé avant Copier
+
+Pour propager le méta-template dans un TP qui a été créé via l'ancien `create-tp.sh` (et n'a pas de `.copier-answers.yml`), créer le fichier d'answers à la main puis lancer `copier update` :
+
+```bash
+cd ../tpN
+
+# Reproduire à la main la composition d'origine du TP
+cat > .copier-answers.yml <<EOF
+_src_path: gh:IUTInfoAix/template-tp
+module:
+  code: "R2.03"
+  titre: "Qualité de développement"
+  org_github: "IUTInfoAix-R203"
+  classroom_org: "IUTInfoAix-R203-2026"
+  codeowner: "@nedseb"
+  contact_email: "sebastien.nedjar@univ-amu.fr"
+tp:
+  numero: 2
+  titre_court: "tp2"
+  titre_complet: "TP2 - TDD"
+  description: "..."
+  classroom_link: "https://classroom.github.com/a/..."
+stack:
+  java_version: 25
+  features: [devcontainer, vscode-config, ai-tutor, autograding-classroom,
+             generate-student, lint-quality, pre-commit-spotless, maven-ci,
+             dependabot, issue-templates, codeowners]
+  packs: []
+  autograding_mode: tdd
+EOF
+
+# Commit le fichier d'answers
+git add .copier-answers.yml && git commit -m "chore: adopter copier"
+
+# Lancer le 1er copier update
+copier update --trust --skip-answered
+
+# Vérifier git diff, commit le résultat
+git status -sb
+git add -A && git commit -m "chore: 1ère mise à jour depuis IUTInfoAix/template-tp"
+```
+
+Grâce à `_skip_if_exists`, `src/exerciceN/` et le `README.md` ne sont pas touchés. Seule l'infra est rebrandée.
+
 ---
 
 ## Ajouter une feature ou un pack à un TP existant
