@@ -42,10 +42,19 @@ json.loads(src)
     [ "$status" -eq 0 ]
 }
 
-@test "vscode-config : launch.json référence la bonne main class" {
-    grep -q '"mainClass": "fr.univ_amu.iut.App"' .vscode/launch.json
+@test "vscode-config sans javafx : launch.json référence la mainClass console (pas le format module)" {
+    grep -Fq '"mainClass": "fr.univ_amu.iut.App"' .vscode/launch.json
+    # Sans pack javafx, pas de '/' dans mainClass et pas de vmArgs.
+    ! grep -Fq -- '"vmArgs"' .vscode/launch.json
+    ! grep -Fq '/fr.univ_amu.iut.App' .vscode/launch.json
+}
+
+@test "vscode-config sans javafx : tasks.json contient une task 'Lancer l'application' (pas javafx:run)" {
+    grep -Fq '"label": "Lancer l'"'"'application (via Maven)"' .vscode/tasks.json
+    grep -Fq '"command": "./mvnw compile exec:java"' .vscode/tasks.json
+    ! grep -Fq -- "javafx:run" .vscode/tasks.json
 }
 
 @test "vscode-config : tasks.json contient au moins une task de Build" {
-    grep -q '"label": "Build complet"' .vscode/tasks.json
+    grep -Fq '"label": "Build complet"' .vscode/tasks.json
 }

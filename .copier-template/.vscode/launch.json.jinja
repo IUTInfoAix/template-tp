@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+{%- if "javafx" in stack.packs %}
+        {
+            "type": "java",
+            "name": "JavaFX : debug l'application",
+            "request": "launch",
+            "mainClass": "tp{{ tp.numero }}.javafx/fr.univ_amu.iut.App",
+            "preLaunchTask": "Build complet",
+            "vmArgs": [
+                "--enable-native-access=ALL-UNNAMED",
+                "--enable-native-access=javafx.graphics",
+                "--add-reads", "javafx.graphics=ALL-UNNAMED",
+                "--add-opens", "javafx.graphics/com.sun.javafx.application=ALL-UNNAMED",
+                "--add-opens", "javafx.base/com.sun.javafx.runtime=ALL-UNNAMED",
+                "--add-exports", "javafx.graphics/com.sun.javafx.application=ALL-UNNAMED"
+            ]
+        }
+{%- else %}
+        {
+            "type": "java",
+            "name": "Debug l'application",
+            "request": "launch",
+            "mainClass": "fr.univ_amu.iut.App",
+            "preLaunchTask": "Build complet"
+        }
+{%- endif %}
+    ]
+}

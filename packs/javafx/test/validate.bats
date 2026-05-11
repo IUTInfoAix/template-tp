@@ -101,6 +101,18 @@ setup() { cd "$TP_DIR"; }
     grep -q '"version": "25-zulu-fx"' .devcontainer/devcontainer.json
 }
 
+@test "javafx : .vscode/tasks.json bascule sur 'javafx:run' (label 'JavaFX : lancer')" {
+    grep -Fq -- '"label": "JavaFX : lancer (via Maven)"' .vscode/tasks.json
+    grep -Fq -- '"command": "./mvnw verify javafx:run"' .vscode/tasks.json
+    ! grep -Fq -- '"command": "./mvnw compile exec:java"' .vscode/tasks.json
+}
+
+@test "javafx : .vscode/launch.json bascule sur la version JavaFX (mainClass module + vmArgs)" {
+    grep -Fq -- '"mainClass": "tp99.javafx/fr.univ_amu.iut.App"' .vscode/launch.json
+    grep -Fq -- '"--add-opens"' .vscode/launch.json
+    grep -Fq -- '"javafx.graphics/com.sun.javafx.application=ALL-UNNAMED"' .vscode/launch.json
+}
+
 @test "javafx : workflow maven.yml utilise xvfb-run" {
     grep -q "xvfb-run --auto-servernum" .github/workflows/maven.yml
 }
