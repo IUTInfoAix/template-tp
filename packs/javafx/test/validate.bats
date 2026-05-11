@@ -40,6 +40,27 @@ setup() { cd "$TP_DIR"; }
     grep -Fq "requires transitive javafx.media;" src/main/java/module-info.java
 }
 
+@test "javafx : pom surefire useModulePath=false + argLine TestFX complet (6 entrées)" {
+    # Le `--` après grep -Fq force grep à traiter le motif comme un argument
+    # positionnel, sinon `--add-opens` serait pris pour une option de grep.
+    # Suite Copilot review PR #27 : vérifier les 6 entrées de l'argLine, pas
+    # juste un sous-ensemble.
+    grep -Fq -- "<useModulePath>false</useModulePath>" pom.xml
+    grep -Fq -- "--enable-native-access=ALL-UNNAMED" pom.xml
+    grep -Fq -- "--enable-native-access=javafx.graphics" pom.xml
+    grep -Fq -- "--add-reads javafx.graphics=ALL-UNNAMED" pom.xml
+    grep -Fq -- "--add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
+    grep -Fq -- "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" pom.xml
+    grep -Fq -- "--add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
+}
+
+@test "javafx : pom javafx-maven-plugin a jlinkImageName + launcher + options native-access" {
+    grep -Fq -- "<jlinkImageName>app</jlinkImageName>" pom.xml
+    grep -Fq -- "<launcher>launcher</launcher>" pom.xml
+    # L'option native-access est aussi dans le bloc <options> du javafx-maven-plugin
+    grep -Fq -- "<option>--enable-native-access=javafx.graphics</option>" pom.xml
+}
+
 @test "javafx : pom mainClass aligné avec module-info (cross-fichier)" {
     # Suite Copilot review PR #26 : un test qui parle d'alignement doit
     # vraiment vérifier l'alignement. Si module-info.java dit
