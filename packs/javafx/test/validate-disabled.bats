@@ -43,6 +43,7 @@ setup() { cd "$TP_DIR"; }
     ! grep -q '"version": "25-zulu-fx"' .devcontainer/devcontainer.json
 }
 
-@test "no-javafx : workflow maven.yml sans xvfb-run" {
+@test "no-javafx : workflow maven.yml sans xvfb-run et sans jdk+fx" {
     ! grep -q "xvfb-run" .github/workflows/maven.yml
+    ! grep -Fq "java-package: 'jdk+fx'" .github/workflows/maven.yml
 }
