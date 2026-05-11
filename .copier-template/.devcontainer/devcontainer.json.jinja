@@ -20,10 +20,16 @@
             "installGradle": "false"
         },
         "ghcr.io/devcontainers/features/github-cli:1": {}{% if "javafx" in stack.packs %},
-        "ghcr.io/devcontainers/features/desktop-lite:1": {}
+        "ghcr.io/devcontainers/features/desktop-lite:1": {
+            "password": "vscode",
+            "webPort": "6080",
+            "vncPort": "5901"
+        }
 {%- endif %}
-
     },
+{%- if "javafx" in stack.packs %}
+    "forwardPorts": [6080, 5901],
+{%- endif %}
     // onCreateCommand : prébuild Maven test-compile pour que le Java LSP
     // démarre instantanément sur Codespaces avec prebuilds activés. bash -lc
     // pour charger SDKMAN. test-compile (et pas dependency:go-offline) pour
