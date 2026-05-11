@@ -11,6 +11,13 @@ updates:
       - "maven"
     commit-message:
       prefix: "chore(deps)"
+{%- if "javafx" in stack.packs %}
+    # Ne bump PAS JavaFX ni javafx-maven-plugin automatiquement :
+    # ces bumps ont un impact fort (rendu, plugin communautaire) et
+    # doivent être décidés à la main par l'enseignant·e.
+    ignore:
+      - dependency-name: "org.openjfx:*"
+{%- endif %}
 
   # Actions GitHub utilisées dans les workflows
   - package-ecosystem: "github-actions"

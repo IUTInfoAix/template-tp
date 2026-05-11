@@ -133,6 +133,10 @@ setup() { cd "$TP_DIR"; }
     done
 }
 
+@test "javafx : dependabot.yml ignore org.openjfx:* (évite bumps automatiques fragiles)" {
+    grep -Fq 'dependency-name: "org.openjfx:*"' .github/dependabot.yml
+}
+
 @test "javafx : workflow maven.yml utilise xvfb-run + java-package: jdk+fx" {
     grep -Fq "xvfb-run --auto-servernum" .github/workflows/maven.yml
     # Zulu standard sans 'jdk+fx' ne ramène pas les natives openjfx,

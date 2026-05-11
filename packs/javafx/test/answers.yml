@@ -15,6 +15,6 @@ tp:
   classroom_link: "https://classroom.github.com/a/TESTFX"
 stack:
   java_version: 25
-  features: [devcontainer, vscode-config, maven-ci, ai-tutor]
+  features: [devcontainer, vscode-config, maven-ci, ai-tutor, dependabot]
   packs: [javafx]
   autograding_mode: tdd
