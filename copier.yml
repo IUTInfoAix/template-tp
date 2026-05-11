@@ -70,9 +70,10 @@ _tasks:
   # Régénère le bloc autograding du workflow Classroom à partir des
   # exercices détectés dans src/test/. Indispensable après chaque
   # `copier copy`/`update` pour que le workflow corresponde aux exercices
-  # réels du TP. No-op si autograding-classroom n'est pas actif (le
-  # script est absent ou non exécutable).
-  - "[ -x ./scripts/update-autograding.sh ] && ./scripts/update-autograding.sh || true"
+  # réels du TP. No-op silencieux si le script est absent (autograding-
+  # classroom non actif) ; une erreur d'exécution du script remonte bien
+  # (pas de `|| true` final qui masquerait un script cassé).
+  - "if [ -x ./scripts/update-autograding.sh ]; then ./scripts/update-autograding.sh; fi"
 
 # =====================================================================
 # Stratégie infra vs contenu pédagogique :
@@ -103,11 +104,13 @@ _skip_if_exists:
   - src/main/resources/exercice*/**
   - src/test/resources/exercice*/**
   - src/test/resources/bonus*/**
-  # App.java + AppTest.java : l'enseignant·e ajoute des entrées au menu
-  # console (`exercices.put(...)`) au fur et à mesure des exercices
-  # créés. Écraser perdrait ces entrées.
-  - src/main/java/fr/univ_amu/iut/App.java
-  - src/test/java/fr/univ_amu/iut/AppTest.java
+  # App.java et AppTest.java NE SONT PAS dans cette liste, à dessein :
+  # ils sont conditionnels sur `stack.packs` (version console vs JavaFX),
+  # et un changement de pack via `copier update` doit pouvoir les
+  # régénérer. Conséquence : si l'enseignant·e a ajouté des entrées au
+  # menu (`exercices.put(...)`), un `copier update` les écrase. Pratique
+  # recommandée : commit avant `copier update`, vérifier `git diff`,
+  # cherry-pick à la main les ajouts au menu.
 
 # =====================================================================
 # Questions interactives

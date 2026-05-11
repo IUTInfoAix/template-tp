@@ -33,15 +33,19 @@ teardown() {
     copier copy --trust --defaults --data-file "$ENABLED_FIXTURE" \
         /tmp/template-source-skip /tmp/tp-skip-test
 
-    # Personnalisation pédagogique
+    # Personnalisation pédagogique (ces fichiers sont dans _skip_if_exists)
     echo "" >> /tmp/tp-skip-test/README.md
     echo "# CUSTOM-MARKER-README - ne pas écraser" >> /tmp/tp-skip-test/README.md
-    echo "// CUSTOM-MARKER-APP - ne pas écraser" >> /tmp/tp-skip-test/src/main/java/fr/univ_amu/iut/App.java
     mkdir -p /tmp/tp-skip-test/src/main/java/fr/univ_amu/iut/exercice42
     echo "// CUSTOM-EXERCICE-42" > /tmp/tp-skip-test/src/main/java/fr/univ_amu/iut/exercice42/FizzBuzz.java
 
     # Bricoler un fichier d'infra (devra être écrasé)
     echo "# CUSTOM-INFRA-MARKER (devrait disparaître)" > /tmp/tp-skip-test/.gitattributes
+
+    # Bricoler App.java (PAS dans _skip_if_exists pour permettre la
+    # bascule pack javafx via copier update). Cette marque DOIT être
+    # écrasée par le re-copier copy.
+    echo "// CUSTOM-MARKER-APP-DOIT-ETRE-ECRASE" >> /tmp/tp-skip-test/src/main/java/fr/univ_amu/iut/App.java
 
     # Re-lance copier copy --overwrite (simule copier update)
     copier copy --trust --defaults --overwrite \
@@ -51,12 +55,16 @@ teardown() {
     # Le contenu pédagogique doit être préservé
     grep -Fq "CUSTOM-MARKER-README" /tmp/tp-skip-test/README.md \
         || { echo "README.md a été écrasé"; return 1; }
-    grep -Fq "CUSTOM-MARKER-APP" /tmp/tp-skip-test/src/main/java/fr/univ_amu/iut/App.java \
-        || { echo "App.java a été écrasé"; return 1; }
     grep -Fq "CUSTOM-EXERCICE-42" /tmp/tp-skip-test/src/main/java/fr/univ_amu/iut/exercice42/FizzBuzz.java \
         || { echo "src/main/java/.../exercice42/FizzBuzz.java a été écrasé"; return 1; }
 
     # L'infra doit être revenue à la version méta-template
     ! grep -Fq "CUSTOM-INFRA-MARKER" /tmp/tp-skip-test/.gitattributes \
         || { echo ".gitattributes n'a PAS été écrasé alors qu'il devrait l'être"; return 1; }
+
+    # App.java NE doit PAS être préservé (volontairement out de
+    # _skip_if_exists pour permettre la bascule pack javafx via
+    # copier update).
+    ! grep -Fq "CUSTOM-MARKER-APP-DOIT-ETRE-ECRASE" /tmp/tp-skip-test/src/main/java/fr/univ_amu/iut/App.java \
+        || { echo "App.java n'a PAS été écrasé alors qu'il devrait l'être (cf. tradeoff bascule pack javafx)"; return 1; }
 }

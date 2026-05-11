@@ -186,7 +186,7 @@ Le merge produit la version finale et signale les conflits dans les fichiers (st
 
 🔄 **Mis à jour à chaque `copier update`** (et donc à utiliser dans une PR à part si l'on veut éviter de perdre des customisations) :
 - Maven Wrapper, `.gitignore`, `.gitattributes`, `LICENSE`
-- Tous les workflows `.github/workflows/*` (et `update-autograding.sh` est ré-exécuté automatiquement à la fin pour régénérer le bloc `#@@@AUTOGRADING@@@` selon les exercices détectés)
+- Tous les workflows `.github/workflows/*` (et `update-autograding.sh` est ré-exécuté automatiquement à la fin pour régénérer le bloc entre les marqueurs `#@@@AUTOGRADING-BEGIN@@@` et `#@@@AUTOGRADING-END@@@` selon les exercices détectés)
 - `.devcontainer/`, `.vscode/`, `.githooks/`, `AGENTS.md`, `.github/copilot-instructions.md`
 - Scripts d'infra : `scripts/{grade-test,update-autograding,lint-doc-coherence,generate-student}.sh`
 - `pom.xml` (volontairement hors `_skip_if_exists` : on veut que les bumps de plugins se propagent ; les rares deps spécifiques d'un TP sont à ré-appliquer manuellement après update)
