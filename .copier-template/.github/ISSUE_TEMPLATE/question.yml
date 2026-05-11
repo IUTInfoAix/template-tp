@@ -1,12 +1,12 @@
 name: ❓ Question sur un exercice
-description: Tu n'es pas bloqué techniquement, tu cherches à comprendre un concept ou un énoncé
+description: Votre question n'est pas d'ordre technique, vous cherchez à comprendre un concept ou un énoncé
 labels:
   - question
 body:
   - type: markdown
     attributes:
       value: |
-        Avant de poser ta question, vérifie que tu as bien **lu l'énoncé** et **essayé** d'activer le premier test rouge. Ça aide à cibler la question.
+        Avant de poser votre question, vérifiez que vous avez bien **lu l'énoncé** et **essayé** d'activer le premier test rouge. Ça aide à cibler la question.
 
   - type: input
     id: exercise
@@ -20,13 +20,13 @@ body:
   - type: textarea
     id: goal
     attributes:
-      label: Ce que tu essaies de faire
+      label: Ce que vous essayez de faire
     validations:
       required: true
 
   - type: textarea
     id: stuck
     attributes:
-      label: Ce que tu ne comprends pas (ou ce qui bloque)
+      label: Ce que vous ne comprenez pas (ou ce qui bloque)
     validations:
       required: true
