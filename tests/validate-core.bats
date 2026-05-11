@@ -43,6 +43,19 @@ setup() { cd "$TP_DIR"; }
     ! grep -F "{%" README.md
 }
 
+@test "core : .idea/runConfigurations/Lancer_l_application.xml présent (config IntelliJ partagée)" {
+    # Régression #23 : ancien R202/R203 posait cette run config qui aide
+    # les étudiant·es IntelliJ à lancer l'app en un clic. Le .gitignore
+    # whitelist .idea/runConfigurations/ pour qu'elle soit commitée.
+    [ -f .idea/runConfigurations/Lancer_l_application.xml ]
+}
+
+@test "core : run config IntelliJ utilise compile + exec:java (sans javafx)" {
+    grep -Fq -- '<option value="compile" />' .idea/runConfigurations/Lancer_l_application.xml
+    grep -Fq -- '<option value="exec:java" />' .idea/runConfigurations/Lancer_l_application.xml
+    ! grep -Fq -- '<option value="javafx:run" />' .idea/runConfigurations/Lancer_l_application.xml
+}
+
 @test "core : README.md sans placeholder ancien template (TP_*, CLASSROOM_LINK, YEAR)" {
     ! grep -F "TP_REPO_NAME" README.md
     ! grep -F "TP_TITLE" README.md

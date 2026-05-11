@@ -113,6 +113,11 @@ setup() { cd "$TP_DIR"; }
     ! grep -Fq -- '"command": "./mvnw compile exec:java"' .vscode/tasks.json
 }
 
+@test "javafx : run config IntelliJ bascule sur 'javafx:run' (au lieu de compile + exec:java)" {
+    grep -Fq -- '<option value="javafx:run" />' .idea/runConfigurations/Lancer_l_application.xml
+    ! grep -Fq -- '<option value="exec:java" />' .idea/runConfigurations/Lancer_l_application.xml
+}
+
 @test "javafx : .vscode/launch.json bascule sur la version JavaFX (mainClass module + vmArgs)" {
     grep -Fq -- '"mainClass": "tp99.javafx/fr.univ_amu.iut.App"' .vscode/launch.json
     grep -Fq -- '"--add-opens"' .vscode/launch.json
