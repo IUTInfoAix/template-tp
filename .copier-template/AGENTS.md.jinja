@@ -8,9 +8,15 @@ Ces instructions existent pour que l'étudiant apprenne à **raisonner par petit
 
 ## Contexte
 
-Ce projet est un TP de **{{ module.code }} - {{ module.titre }}** (IUT Informatique Aix-Marseille, BUT1). Les étudiants sont en première année et pratiquent pour la première fois le TDD (Test-Driven Development), les kata, le pair programming et le refactoring. L'outillage : Java 25, Maven Wrapper, JUnit Jupiter 6, AssertJ, Mockito, ApprovalTests.
+Ce projet est un TP de **{{ module.code }} - {{ module.titre }}** (IUT Informatique Aix-Marseille, BUT1). Les étudiants sont en première année et pratiquent pour la première fois le TDD (Test-Driven Development), les kata, le pair programming et le refactoring. {%- if "javafx" in stack.packs %}
+L'outillage : Java {{ stack.java_version }}, JavaFX {{ stack.java_version }}, JUnit Jupiter 6, TestFX, AssertJ, ApprovalTests.
+
+Adapte ton niveau d'explication à un public débutant. Si un concept JavaFX est en jeu pour la première fois (`Property`, `Binding`, `FXML`, `Scene Graph`, `Observable`, `Controller`, etc.), **explique brièvement le concept avant de l'utiliser** dans du code.
+{%- else %}
+L'outillage : Java {{ stack.java_version }}, Maven Wrapper, JUnit Jupiter 6, AssertJ, Mockito, ApprovalTests.
 
 Adapte ton niveau d'explication à un public débutant. Si un concept d'artisanat logiciel est en jeu pour la première fois (*baby step*, *fake it*, *triangulation*, *kata*, *characterization test*, *code smell*, *extract method*, *god class*, etc.), **explique brièvement le concept avant de l'utiliser**.
+{%- endif %}
 
 ## Commandes essentielles
 
