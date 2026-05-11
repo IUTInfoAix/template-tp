@@ -96,9 +96,15 @@ setup() { cd "$TP_DIR"; }
     [ -f .github/assets/create_codespace_on_main.png ]
 }
 
-@test "javafx : devcontainer.json a feature desktop-lite + JDK 25-zulu-fx" {
+@test "javafx : devcontainer.json a feature desktop-lite (avec password+ports) + JDK 25-zulu-fx + forwardPorts" {
     grep -q "desktop-lite" .devcontainer/devcontainer.json
     grep -q '"version": "25-zulu-fx"' .devcontainer/devcontainer.json
+    # Régression #20 : ancien R202 configurait password + webPort + vncPort,
+    # sinon impossible de se connecter au VNC desktop-lite depuis Codespaces.
+    grep -Fq '"password": "vscode"' .devcontainer/devcontainer.json
+    grep -Fq '"webPort": "6080"' .devcontainer/devcontainer.json
+    grep -Fq '"vncPort": "5901"' .devcontainer/devcontainer.json
+    grep -Fq '"forwardPorts": [6080, 5901]' .devcontainer/devcontainer.json
 }
 
 @test "javafx : .vscode/tasks.json bascule sur 'javafx:run' (label 'JavaFX : lancer')" {
