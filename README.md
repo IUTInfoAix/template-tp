@@ -48,7 +48,7 @@ Pour ajouter une feature ou un pack à un TP existant : éditez `.copier-answers
 | [`maven-ci`](features/maven-ci/) | ✅ | – | 8 + 1 |
 | [`dependabot`](features/dependabot/) | ✅ | – | 5 + 1 |
 | [`issue-templates`](features/issue-templates/) | ✅ | – | 4 + 1 |
-| [`codeowners`](features/codeowners/) | ⬜ | – | 3 + 1 |
+| [`codeowners`](features/codeowners/) | ✅ | – | 3 + 1 |
 
 | Pack | Défaut | Inject pom | Tests bats |
 |---|---:|---:|---:|

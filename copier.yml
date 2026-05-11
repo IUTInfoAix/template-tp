@@ -120,6 +120,7 @@ stack:
       - maven-ci
       - dependabot
       - issue-templates
+      - codeowners
     packs: []
     autograding_mode: tdd
   help: |
