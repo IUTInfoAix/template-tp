@@ -60,7 +60,7 @@ extract_playbook() {
     grep -Fq "Maven Wrapper" AGENTS.md
     grep -Fq "Mockito" AGENTS.md
     grep -Fq "artisanat logiciel" AGENTS.md
-    ! grep -Fq "JavaFX 25" AGENTS.md
+    ! grep -Fq "JavaFX" AGENTS.md
     ! grep -Fq "TestFX" AGENTS.md
     ! grep -Fq "concept JavaFX" AGENTS.md
 }
@@ -68,7 +68,7 @@ extract_playbook() {
 @test "ai-tutor sans javafx : meme variation dans copilot-instructions.md" {
     grep -Fq "Maven Wrapper" .github/copilot-instructions.md
     grep -Fq "artisanat logiciel" .github/copilot-instructions.md
-    ! grep -Fq "JavaFX 25" .github/copilot-instructions.md
+    ! grep -Fq "JavaFX" .github/copilot-instructions.md
     ! grep -Fq "TestFX" .github/copilot-instructions.md
 }
 

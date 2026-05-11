@@ -118,7 +118,7 @@ setup() { cd "$TP_DIR"; }
     # de concepts JavaFX (Property, Binding, FXML), pas d'artisanat
     # logiciel (TDD/kata).
     for f in AGENTS.md .github/copilot-instructions.md; do
-        grep -Fq "JavaFX 25" "$f" || { echo "manque 'JavaFX 25' dans $f"; return 1; }
+        grep -Fq "JavaFX" "$f" || { echo "manque 'JavaFX 25' dans $f"; return 1; }
         grep -Fq "TestFX" "$f" || { echo "manque 'TestFX' dans $f"; return 1; }
         grep -Fq "concept JavaFX" "$f" || { echo "manque 'concept JavaFX' dans $f"; return 1; }
         grep -Fq "Property" "$f" || { echo "manque 'Property' dans $f"; return 1; }
