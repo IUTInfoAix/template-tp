@@ -54,6 +54,24 @@ extract_playbook() {
     [ "$status" -eq 0 ]
 }
 
+@test "ai-tutor sans javafx : variation 'artisanat logiciel' active (Maven Wrapper, pas JavaFX/TestFX)" {
+    # Suite régression #16 : sans pack javafx, le tuteur IA doit parler
+    # d'artisanat logiciel (TDD/kata/refactoring), pas de concepts JavaFX.
+    grep -Fq "Maven Wrapper" AGENTS.md
+    grep -Fq "Mockito" AGENTS.md
+    grep -Fq "artisanat logiciel" AGENTS.md
+    ! grep -Fq "JavaFX" AGENTS.md
+    ! grep -Fq "TestFX" AGENTS.md
+    ! grep -Fq "concept JavaFX" AGENTS.md
+}
+
+@test "ai-tutor sans javafx : meme variation dans copilot-instructions.md" {
+    grep -Fq "Maven Wrapper" .github/copilot-instructions.md
+    grep -Fq "artisanat logiciel" .github/copilot-instructions.md
+    ! grep -Fq "JavaFX" .github/copilot-instructions.md
+    ! grep -Fq "TestFX" .github/copilot-instructions.md
+}
+
 @test "ai-tutor : bloc TDD-PLAYBOOK non-vide (au moins 100 lignes)" {
     n=$(extract_playbook AGENTS.md | wc -l)
     [ "$n" -gt 100 ]

@@ -113,6 +113,20 @@ setup() { cd "$TP_DIR"; }
     grep -Fq -- '"javafx.graphics/com.sun.javafx.application=ALL-UNNAMED"' .vscode/launch.json
 }
 
+@test "javafx : ai-tutor injecte la variation JavaFX (AGENTS.md + copilot-instructions.md)" {
+    # Suite régression #16 : avec pack javafx, le tuteur IA doit parler
+    # de concepts JavaFX (Property, Binding, FXML), pas d'artisanat
+    # logiciel (TDD/kata).
+    for f in AGENTS.md .github/copilot-instructions.md; do
+        grep -Fq "JavaFX" "$f" || { echo "manque 'JavaFX 25' dans $f"; return 1; }
+        grep -Fq "TestFX" "$f" || { echo "manque 'TestFX' dans $f"; return 1; }
+        grep -Fq "concept JavaFX" "$f" || { echo "manque 'concept JavaFX' dans $f"; return 1; }
+        grep -Fq "Property" "$f" || { echo "manque 'Property' dans $f"; return 1; }
+        # Pas la variation artisanat
+        ! grep -Fq "Maven Wrapper, JUnit Jupiter 6, AssertJ, Mockito" "$f" || { echo "$f a la variation artisanat alors que pack javafx actif"; return 1; }
+    done
+}
+
 @test "javafx : workflow maven.yml utilise xvfb-run" {
     grep -q "xvfb-run --auto-servernum" .github/workflows/maven.yml
 }
