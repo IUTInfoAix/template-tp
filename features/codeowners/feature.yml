@@ -6,8 +6,8 @@ description: |
   avec plusieurs encadrants ou pour notifier l'enseignant des PRs
   étudiantes (Group Assignment TP3).
 
-  default: false (les TPs solo R203 fonctionnent sans).
-default: false
+  Auto-assigne le `module.codeowner` comme reviewer sur toutes les PRs. Cohérent avec l'ancien R203/template-tp-java qui posait toujours ce fichier.
+default: true
 requires: []
 conflicts: []
 files:
