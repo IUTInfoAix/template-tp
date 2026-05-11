@@ -67,6 +67,50 @@ _tasks:
   # devoir relire le .copier-answers.yml (qui n'est pas garanti écrit
   # avant les tasks).
   - "python3 {{ _copier_conf.src_path }}/scripts/validate_deps.py --features '{{ stack.features|join(',') }}' --packs '{{ stack.packs|join(',') }}'"
+  # Régénère le bloc autograding du workflow Classroom à partir des
+  # exercices détectés dans src/test/. Indispensable après chaque
+  # `copier copy`/`update` pour que le workflow corresponde aux exercices
+  # réels du TP. No-op silencieux si le script est absent (autograding-
+  # classroom non actif) ; une erreur d'exécution du script remonte bien
+  # (pas de `|| true` final qui masquerait un script cassé).
+  - "if [ -x ./scripts/update-autograding.sh ]; then ./scripts/update-autograding.sh; fi"
+
+# =====================================================================
+# Stratégie infra vs contenu pédagogique :
+#
+# Les fichiers ci-dessous sont GÉNÉRÉS à la création initiale (`copier
+# copy`) mais JAMAIS écrasés par un `copier update` ultérieur. Ce sont
+# des fichiers de contenu pédagogique que l'enseignant·e personnalise
+# par TP (énoncés, src d'exercices, README riche). Tous les autres
+# fichiers (workflows, devcontainer, .vscode, scripts d'infra,
+# pom.xml...) sont mis à jour normalement à chaque `copier update`.
+#
+# Le pom.xml est délibérément hors de cette liste : on veut que les
+# bumps de versions de plugins se propagent. Les rares cas où un TP a
+# une dep spécifique (ex: tp4 R203 + Gilded Rose) sont à ré-appliquer
+# manuellement après un `copier update` qui les écraserait.
+# =====================================================================
+_skip_if_exists:
+  # README de TP : squelette pédagogique (objectifs Bloom, prérequis,
+  # sections exercices) entièrement personnalisé par l'enseignant·e.
+  - README.md
+  # Sources et tests d'exercices (par convention, sous-paquets exerciceN/
+  # et bonusN/). Le contenu est l'essence pédagogique du TP.
+  - src/main/java/fr/univ_amu/iut/exercice*/**
+  - src/test/java/fr/univ_amu/iut/exercice*/**
+  - src/main/java/fr/univ_amu/iut/bonus*/**
+  - src/test/java/fr/univ_amu/iut/bonus*/**
+  # Ressources d'exercices (notamment ApprovalTests *.approved.txt).
+  - src/main/resources/exercice*/**
+  - src/test/resources/exercice*/**
+  - src/test/resources/bonus*/**
+  # App.java et AppTest.java NE SONT PAS dans cette liste, à dessein :
+  # ils sont conditionnels sur `stack.packs` (version console vs JavaFX),
+  # et un changement de pack via `copier update` doit pouvoir les
+  # régénérer. Conséquence : si l'enseignant·e a ajouté des entrées au
+  # menu (`exercices.put(...)`), un `copier update` les écrase. Pratique
+  # recommandée : commit avant `copier update`, vérifier `git diff`,
+  # cherry-pick à la main les ajouts au menu.
 
 # =====================================================================
 # Questions interactives
