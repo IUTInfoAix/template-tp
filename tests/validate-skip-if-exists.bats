@@ -17,8 +17,10 @@
 ENABLED_FIXTURE="${BATS_TEST_DIRNAME}/../features/lint-quality/test/answers.yml"
 
 setup() {
-    rm -rf /tmp/tp-skip-test
-    cp -r /home/nedjar/sandbox/template-tp /tmp/template-source-skip
+    rm -rf /tmp/tp-skip-test /tmp/template-source-skip
+    # BATS_TEST_DIRNAME = .../tests, donc /.. = racine du méta-template.
+    # Marche en local et en CI sans hardcoder le chemin.
+    cp -r "${BATS_TEST_DIRNAME}/.." /tmp/template-source-skip
     rm -rf /tmp/template-source-skip/.git
 }
 
