@@ -32,6 +32,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Bloc TDD-PLAYBOOK identique entre AGENTS.md.jinja et copilot-instructions.md.jinja
         # Garde-fou : empêche un commit qui modifierait le bloc dans un seul
         # des 2 fichiers. Doublon volontaire avec features/ai-tutor/test/
@@ -54,6 +56,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -66,12 +70,17 @@ jobs:
           pip install copier pyyaml
           sudo apt-get update -qq
           sudo apt-get install -y -qq bats
+
+      - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
+        run: |
+          rm -rf /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
       - name: Generate TP (compose lint-quality - minimum vital)
         run: |
           rm -rf /tmp/tp-core
-          copier copy --trust --defaults \
+          copier copy --trust --vcs-ref=HEAD --defaults \
             --data-file features/lint-quality/test/answers.yml \
-            . /tmp/tp-core
+            /tmp/template-source /tmp/tp-core
       - name: Bats — core
         env:
           TP_DIR: /tmp/tp-core
@@ -97,6 +106,8 @@ jobs:
           - generate-student
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -118,12 +129,17 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq bats
 
+      - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
+        run: |
+          rm -rf /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
+
       - name: Generate TP with feature ${{ matrix.feature }} ENABLED
         run: |
           rm -rf /tmp/tp-${{ matrix.feature }}
-          copier copy --trust --defaults \
+          copier copy --trust --vcs-ref=HEAD --defaults \
             --data-file features/${{ matrix.feature }}/test/answers.yml \
-            . /tmp/tp-${{ matrix.feature }}
+            /tmp/template-source /tmp/tp-${{ matrix.feature }}
 
       - name: Bats — feature enabled
         env:
@@ -134,9 +150,9 @@ jobs:
         if: hashFiles(format('features/{0}/test/answers-disabled.yml', matrix.feature)) != ''
         run: |
           rm -rf /tmp/tp-no-${{ matrix.feature }}
-          copier copy --trust --defaults \
+          copier copy --trust --vcs-ref=HEAD --defaults \
             --data-file features/${{ matrix.feature }}/test/answers-disabled.yml \
-            . /tmp/tp-no-${{ matrix.feature }}
+            /tmp/template-source /tmp/tp-no-${{ matrix.feature }}
 
       - name: Bats — feature disabled (négation)
         if: hashFiles(format('features/{0}/test/validate-disabled.bats', matrix.feature)) != ''
@@ -154,6 +170,8 @@ jobs:
           - javafx
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -166,12 +184,17 @@ jobs:
           pip install copier pyyaml
           sudo apt-get update -qq
           sudo apt-get install -y -qq bats xvfb
+
+      - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
+        run: |
+          rm -rf /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
       - name: Generate TP with pack ${{ matrix.pack }} ENABLED
         run: |
           rm -rf /tmp/tp-pack-${{ matrix.pack }}
-          copier copy --trust --defaults \
+          copier copy --trust --vcs-ref=HEAD --defaults \
             --data-file packs/${{ matrix.pack }}/test/answers.yml \
-            . /tmp/tp-pack-${{ matrix.pack }}
+            /tmp/template-source /tmp/tp-pack-${{ matrix.pack }}
       - name: Bats — pack enabled
         env:
           TP_DIR: /tmp/tp-pack-${{ matrix.pack }}
@@ -180,9 +203,9 @@ jobs:
         if: hashFiles(format('packs/{0}/test/answers-disabled.yml', matrix.pack)) != ''
         run: |
           rm -rf /tmp/tp-no-pack-${{ matrix.pack }}
-          copier copy --trust --defaults \
+          copier copy --trust --vcs-ref=HEAD --defaults \
             --data-file packs/${{ matrix.pack }}/test/answers-disabled.yml \
-            . /tmp/tp-no-pack-${{ matrix.pack }}
+            /tmp/template-source /tmp/tp-no-pack-${{ matrix.pack }}
       - name: Bats — pack disabled (négation)
         if: hashFiles(format('packs/{0}/test/validate-disabled.bats', matrix.pack)) != ''
         env:
@@ -194,6 +217,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
@@ -206,12 +231,17 @@ jobs:
           pip install copier pyyaml
           sudo apt-get update -qq
           sudo apt-get install -y -qq bats
+
+      - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
+        run: |
+          rm -rf /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
       - name: Generate TP with spotless + lint-quality
         run: |
           rm -rf /tmp/tp-spot-lint
-          copier copy --trust --defaults \
+          copier copy --trust --vcs-ref=HEAD --defaults \
             --data-file features/pre-commit-spotless/test/answers-with-lint.yml \
-            . /tmp/tp-spot-lint
+            /tmp/template-source /tmp/tp-spot-lint
       - name: Bats — composition spotless + lint
         env:
           TP_DIR: /tmp/tp-spot-lint
