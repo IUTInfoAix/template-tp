@@ -127,8 +127,11 @@ setup() { cd "$TP_DIR"; }
     done
 }
 
-@test "javafx : workflow maven.yml utilise xvfb-run" {
-    grep -q "xvfb-run --auto-servernum" .github/workflows/maven.yml
+@test "javafx : workflow maven.yml utilise xvfb-run + java-package: jdk+fx" {
+    grep -Fq "xvfb-run --auto-servernum" .github/workflows/maven.yml
+    # Zulu standard sans 'jdk+fx' ne ramène pas les natives openjfx,
+    # cf. issue #18.
+    grep -Fq "java-package: 'jdk+fx'" .github/workflows/maven.yml
 }
 
 @test "javafx : ./mvnw dependency:tree liste les 4 modules JavaFX (idiomatique)" {

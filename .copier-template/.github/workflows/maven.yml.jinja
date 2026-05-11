@@ -14,11 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Set up JDK {{ stack.java_version }}
+      - name: Set up JDK {{ stack.java_version }}{% if "javafx" in stack.packs %} with JavaFX{% endif %}
         uses: actions/setup-java@v5
         with:
           java-version: '{{ stack.java_version }}'
           distribution: 'zulu'
+{%- if "javafx" in stack.packs %}
+          # Zulu standard ne contient pas JavaFX runtime ; jdk+fx ramène le
+          # JDK avec les natives openjfx (libGL, libGTK...) nécessaires aux
+          # tests TestFX headless.
+          java-package: 'jdk+fx'
+{%- endif %}
           cache: maven
 
       - name: Run tests
