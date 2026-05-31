@@ -3,8 +3,9 @@ type: feature
 description: |
   Workflow GitHub Actions de build/tests Maven sur chaque push et PR.
   Java version paramétrée par stack.java_version, distribution Zulu,
-  cache Maven natif. Si pack javafx actif, lance via xvfb-run pour
-  TestFX headless.
+  cache Maven natif. Si pack javafx actif, les tests TestFX tournent en
+  headless via la Headless Platform JavaFX 26 (glass.platform=Headless) :
+  ni xvfb ni runtime natif jdk+fx requis.
 default: true
 requires: []
 conflicts: []

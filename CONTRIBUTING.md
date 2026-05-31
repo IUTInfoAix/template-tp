@@ -244,8 +244,8 @@ Voir [packs/javafx/](packs/javafx/) comme référence complète.
     [ "$status" -eq 0 ]
 }
 
-@test "javafx : xvfb-run ./mvnw verify passe (TestFX réellement exécuté)" {
-    run xvfb-run --auto-servernum ./mvnw -B -q -ntp verify
+@test "javafx : ./mvnw verify passe en headless (TestFX réellement exécuté)" {
+    run ./mvnw -B -q -ntp verify
     [ "$status" -eq 0 ]
 }
 
@@ -292,7 +292,7 @@ Si votre feature interagit avec une autre (ex `pre-commit-spotless` injecte un b
 |---|---|
 | `meta-checks` | Toujours. Vérifie la sync `TDD-PLAYBOOK` entre `AGENTS.md.jinja` et `copilot-instructions.md.jinja` (avant génération). |
 | `test-feature-isolated` | Matrice sur `features` listées. Génère un TP avec la feature ACTIVÉE puis DÉSACTIVÉE, lance bats. |
-| `test-pack-isolated` | Idem pour `packs`. Installe `xvfb` en plus pour les packs UI. |
+| `test-pack-isolated` | Idem pour `packs`. Le pack `javafx` teste en headless (JavaFX 26), sans xvfb. |
 | `test-composition-...` | Job dédié par interaction critique. Aujourd'hui : `pre-commit-spotless + lint-quality`. |
 
 Pour ajouter une feature : étendre la liste `matrix.feature`. Pour ajouter une composition critique : copier le job `test-composition-spotless-with-lint` et adapter les fixtures.

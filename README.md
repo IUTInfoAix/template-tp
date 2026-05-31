@@ -84,7 +84,7 @@ Un **pack** = stack technique cohérente (`javafx` pour l'instant ; futurs : `jp
 - **Copier 9+** (`pipx install copier`)
 - **Bats** pour lancer les tests en local (`apt install bats`)
 - **JDK 25** (Zulu recommandé via SDKMAN, `25-zulu-fx` si vous touchez au pack `javafx`)
-- **xvfb** côté Linux/CI pour les tests TestFX du pack `javafx` (`apt install xvfb`)
+- **xvfb non requis** : depuis JavaFX 26, les tests TestFX du pack `javafx` tournent en headless (`-Dglass.platform=Headless`), sans display X11 ni xvfb. (xvfb ne sert plus qu'à afficher `./mvnw javafx:run` via VNC dans le devcontainer.)
 
 ## Licence
 

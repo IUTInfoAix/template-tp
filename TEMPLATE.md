@@ -23,7 +23,7 @@ Ce manuel cible **les enseignant·es** qui génèrent ou maintiennent des TP ave
 ```bash
 pipx install copier            # scaffolding
 sudo apt install bats          # tests en local (optionnel)
-sudo apt install xvfb          # uniquement si pack javafx
+# xvfb n'est plus nécessaire : le pack javafx teste en headless (JavaFX 26)
 ```
 
 Vérifications :
@@ -115,7 +115,7 @@ stack:
   autograding_mode: tdd
 ```
 
-`pack javafx` requiert `devcontainer` (sinon xvfb manquant en Codespaces). `validate_deps.py` rejette la composition si vous l'oubliez.
+`pack javafx` requiert `devcontainer` (sinon pas de desktop-lite/VNC en Codespaces pour afficher `./mvnw javafx:run`). `validate_deps.py` rejette la composition si vous l'oubliez.
 
 ### TP refactoring (TP4 R203 style)
 
@@ -248,7 +248,7 @@ Modifier `.copier-answers.yml` pour ajouter le nom dans `stack.features` ou `sta
 cd ../tpN
 yq -i '.stack.packs += ["javafx"]' .copier-answers.yml
 copier update --skip-answered
-xvfb-run --auto-servernum ./mvnw verify   # vérification idiomatique
+./mvnw verify   # vérification idiomatique (TestFX headless, JavaFX 26)
 ```
 
 `copier update` injecte automatiquement les 4 deps JavaFX dans le `pom.xml`, ajoute le `Dockerfile`, bascule `App.java` sur la version Application... et signale en conflit toute personnalisation locale qui collisionnerait.
@@ -330,7 +330,7 @@ copier copy --trust --defaults \
   . /tmp/tp-no-test
 TP_DIR=/tmp/tp-no-test bats features/lint-quality/test/validate-disabled.bats
 
-# Tester le pack javafx (nécessite xvfb)
+# Tester le pack javafx (headless, sans xvfb)
 rm -rf /tmp/tp-fx
 copier copy --trust --defaults \
   --data-file packs/javafx/test/answers.yml \

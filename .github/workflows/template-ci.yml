@@ -6,7 +6,7 @@
 #      `answers-disabled.yml` quand il existe) ;
 #   2. lance les tests Bats `validate.bats` (ou `validate-disabled.bats`)
 #      qui exécutent l'idiomatique du langage cible (mvnw verify,
-#      pmd:check, xvfb-run, etc.).
+#      pmd:check, etc.).
 #
 # Ajouter une nouvelle feature/pack = ajouter une entrée dans la matrice
 # correspondante. Les compositions courantes (default, default-with-javafx,
@@ -182,11 +182,11 @@ jobs:
         with:
           java-version: "25"
           distribution: "zulu"
-      - name: Install copier + bats + xvfb (pour TestFX headless)
+      - name: Install copier + bats
         run: |
           pip install copier pyyaml
           sudo apt-get update -qq
-          sudo apt-get install -y -qq bats xvfb
+          sudo apt-get install -y -qq bats
 
       - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
         run: |

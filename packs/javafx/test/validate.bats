@@ -1,7 +1,8 @@
 #!/usr/bin/env bats
 # Tests Bats : pack javafx ACTIVÉ.
-# Test idiomatique = `xvfb-run --auto-servernum ./mvnw verify` qui
-# exécute réellement TestFX. La CI installe xvfb avant ce job.
+# Test idiomatique = `./mvnw verify` qui exécute réellement TestFX en
+# headless (Headless Platform JavaFX 26, glass.platform=Headless) : ni
+# fenêtre ni xvfb, en local comme en CI.
 
 setup() { cd "$TP_DIR"; }
 
@@ -40,18 +41,22 @@ setup() { cd "$TP_DIR"; }
     grep -Fq "requires transitive javafx.media;" src/main/java/module-info.java
 }
 
-@test "javafx : pom surefire useModulePath=false + argLine TestFX complet (6 entrées)" {
+@test "javafx : pom surefire headless (Headless Platform JavaFX 26) + argLine TestFX complet (8 entrées)" {
     # Le `--` après grep -Fq force grep à traiter le motif comme un argument
     # positionnel, sinon `--add-opens` serait pris pour une option de grep.
-    # Suite Copilot review PR #27 : vérifier les 6 entrées de l'argLine, pas
-    # juste un sous-ensemble.
     grep -Fq -- "<useModulePath>false</useModulePath>" pom.xml
+    # Headless Platform JavaFX 26 (Gluon) : tests sans fenêtre ni xvfb.
+    grep -Fq -- "<glass.platform>Headless</glass.platform>" pom.xml
+    grep -Fq -- "<prism.order>sw</prism.order>" pom.xml
+    grep -Fq -- "<testfx.robot>glass</testfx.robot>" pom.xml
     grep -Fq -- "--enable-native-access=ALL-UNNAMED" pom.xml
     grep -Fq -- "--enable-native-access=javafx.graphics" pom.xml
     grep -Fq -- "--add-reads javafx.graphics=ALL-UNNAMED" pom.xml
     grep -Fq -- "--add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
     grep -Fq -- "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" pom.xml
     grep -Fq -- "--add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
+    grep -Fq -- "--add-exports javafx.graphics/com.sun.javafx.util=ALL-UNNAMED" pom.xml
+    grep -Fq -- "--add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED" pom.xml
 }
 
 @test "javafx : pom javafx-maven-plugin a jlinkImageName + launcher + options native-access" {
@@ -129,7 +134,7 @@ setup() { cd "$TP_DIR"; }
     # de concepts JavaFX (Property, Binding, FXML), pas d'artisanat
     # logiciel (TDD/kata).
     for f in AGENTS.md .github/copilot-instructions.md; do
-        grep -Fq "JavaFX" "$f" || { echo "manque 'JavaFX 25' dans $f"; return 1; }
+        grep -Fq "JavaFX" "$f" || { echo "manque 'JavaFX' dans $f"; return 1; }
         grep -Fq "TestFX" "$f" || { echo "manque 'TestFX' dans $f"; return 1; }
         grep -Fq "concept JavaFX" "$f" || { echo "manque 'concept JavaFX' dans $f"; return 1; }
         grep -Fq "Property" "$f" || { echo "manque 'Property' dans $f"; return 1; }
@@ -142,11 +147,11 @@ setup() { cd "$TP_DIR"; }
     grep -Fq 'dependency-name: "org.openjfx:*"' .github/dependabot.yml
 }
 
-@test "javafx : workflow maven.yml utilise xvfb-run + java-package: jdk+fx" {
-    grep -Fq "xvfb-run --auto-servernum" .github/workflows/maven.yml
-    # Zulu standard sans 'jdk+fx' ne ramène pas les natives openjfx,
-    # cf. issue #18.
-    grep -Fq "java-package: 'jdk+fx'" .github/workflows/maven.yml
+@test "javafx : workflow maven.yml SANS xvfb-run ni jdk+fx (Headless Platform JavaFX 26)" {
+    # JavaFX 26 + glass.platform=Headless : tests headless, donc plus de
+    # xvfb ni de runtime natif jdk+fx (JavaFX vient des deps org.openjfx).
+    ! grep -Fq "xvfb-run" .github/workflows/maven.yml
+    ! grep -Fq "java-package: 'jdk+fx'" .github/workflows/maven.yml
 }
 
 @test "javafx : ./mvnw dependency:tree liste les 4 modules JavaFX (idiomatique)" {
@@ -156,10 +161,11 @@ setup() { cd "$TP_DIR"; }
     [ "$output" -ge 6 ]   # 4 deps directes + transitive (linux classifier)
 }
 
-@test "javafx : xvfb-run ./mvnw verify passe (TestFX réellement exécuté, idiomatique)" {
-    # IDIOMATIC : on lance vraiment TestFX via xvfb-run. C'est CE test
-    # qui couvre la promesse "le TP JavaFX généré marche en CI".
-    # xvfb doit être installé sur l'host (apt install xvfb).
-    run xvfb-run --auto-servernum ./mvnw -B -q -ntp verify
+@test "javafx : ./mvnw verify passe en headless (TestFX réellement exécuté, idiomatique)" {
+    # IDIOMATIC : on lance vraiment TestFX, en headless via la Headless
+    # Platform JavaFX 26 (glass.platform=Headless, cf. pom.xml). C'est CE
+    # test qui couvre la promesse "le TP JavaFX généré marche en CI".
+    # Aucun display X11 ni xvfb requis.
+    run ./mvnw -B -q -ntp verify
     [ "$status" -eq 0 ]
 }

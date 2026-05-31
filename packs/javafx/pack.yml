@@ -1,28 +1,33 @@
 name: javafx
 type: pack
 description: |
-  Pack JavaFX 25 + TestFX pour les TP R2.02 (et autres modules IHM).
+  Pack JavaFX 26 + TestFX pour les TP R2.02 (et autres modules IHM).
 
   Inclut :
   - 4 deps Maven : javafx-controls, javafx-fxml, javafx-graphics,
-    javafx-media (toutes en version 25, alignée sur stack.java_version).
+    javafx-media (toutes en version 26 ; JavaFX 26 est découplé de
+    stack.java_version, qui reste à 25).
   - 2 deps test : testfx-core + testfx-junit5 (TestFX 4.0.18).
   - Plugin javafx-maven-plugin pour `./mvnw javafx:run`.
   - App.java basculé sur la version Application + Stage + Scene.
   - AppTest.java basculé sur ApplicationExtension + FxRobot.
-  - .devcontainer/Dockerfile (libgtk + xvfb pour TestFX headless).
+  - .devcontainer/Dockerfile (libgtk + xvfb pour afficher `./mvnw
+    javafx:run` via VNC en Codespaces ; les tests TestFX, eux, tournent
+    en headless sans xvfb).
   - src/main/resources/DarkTheme.css + assets/ (maquettes Codespace).
   - .devcontainer/devcontainer.json : feature desktop-lite ajoutée +
     JDK 25-zulu-fx au lieu de 25-zulu.
-  - .github/workflows/maven.yml : `xvfb-run --auto-servernum mvnw verify`
-    pour TestFX headless en CI.
+  - .github/workflows/maven.yml : `./mvnw verify` ; les tests TestFX
+    tournent en headless via la Headless Platform JavaFX 26
+    (glass.platform=Headless), sans xvfb ni display X11.
 
-  Test idiomatique : `xvfb-run --auto-servernum ./mvnw verify` qui
-  exécute réellement TestFX sur le smoke test.
+  Test idiomatique : `./mvnw verify` qui exécute réellement TestFX sur le
+  smoke test, en headless (Headless Platform JavaFX 26, sans xvfb).
 default: false
 requires:
-  # Sans devcontainer, le développement JavaFX en Codespaces est
-  # impossible (xvfb manquant) - on protège l'utilisateur.
+  # Sans devcontainer, pas de desktop-lite/VNC en Codespaces : `./mvnw
+  # javafx:run` n'aurait nulle part où afficher sa fenêtre. (Les tests
+  # sont headless et n'en ont pas besoin.)
   - devcontainer
 conflicts: []
 files:
