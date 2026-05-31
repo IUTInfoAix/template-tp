@@ -29,6 +29,10 @@
     },
 {%- if "javafx" in stack.packs %}
     "forwardPorts": [6080, 5901],
+    // Résolution du bureau VNC (desktop-lite) : agrandie de 1440x768 (défaut)
+    // à 1920x1080 pour que les fenêtres JavaFX un peu grandes tiennent dans le
+    // noVNC sans déborder.
+    "containerEnv": { "VNC_RESOLUTION": "1920x1080x16" },
 {%- endif %}
     // onCreateCommand : prébuild Maven test-compile pour que le Java LSP
     // démarre instantanément sur Codespaces avec prebuilds activés. bash -lc
