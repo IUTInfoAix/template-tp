@@ -101,9 +101,13 @@ setup() { cd "$TP_DIR"; }
     [ -f .github/assets/create_codespace_on_main.png ]
 }
 
-@test "javafx : devcontainer.json a feature desktop-lite (avec password+ports) + JDK 25-zulu-fx + forwardPorts" {
+@test "javafx : devcontainer.json a feature desktop-lite (avec password+ports) + JDK 25-zulu (standard, FX via Maven) + forwardPorts" {
     grep -q "desktop-lite" .devcontainer/devcontainer.json
-    grep -q '"version": "25-zulu-fx"' .devcontainer/devcontainer.json
+    # JDK Zulu STANDARD (sans FX bundlé) : un JDK fx-zulu exposerait JavaFX 25
+    # sur le module-path, masquant les jars Maven JavaFX 26 -> la Headless
+    # Platform des tests ne serait pas trouvée (NPE PlatformFactory). FX = Maven.
+    grep -Fq '"version": "25-zulu"' .devcontainer/devcontainer.json
+    ! grep -Fq '"version": "25-zulu-fx"' .devcontainer/devcontainer.json
     # Régression #20 : ancien R202 configurait password + webPort + vncPort,
     # sinon impossible de se connecter au VNC desktop-lite depuis Codespaces.
     grep -Fq '"password": "vscode"' .devcontainer/devcontainer.json

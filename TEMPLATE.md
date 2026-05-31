@@ -103,7 +103,7 @@ stack:
 
 ### TP Java + JavaFX (R2.02 standard)
 
-Comme le standard, mais avec `packs: [javafx]`. Le pack injecte 4 deps JavaFX + 2 deps TestFX, le `javafx-maven-plugin`, le `Dockerfile` xvfb du devcontainer, la feature `desktop-lite`, le suffixe `-fx` au JDK Zulu, et bascule `App.java`/`AppTest.java` sur la version JavaFX (Stage + Scene + TestFX).
+Comme le standard, mais avec `packs: [javafx]`. Le pack injecte 4 deps JavaFX + 2 deps TestFX, le `javafx-maven-plugin`, le `Dockerfile` xvfb du devcontainer, la feature `desktop-lite` (le JDK reste le Zulu standard `25-zulu` : JavaFX vient des deps Maven, un JDK fx-zulu casserait la Headless Platform des tests), et bascule `App.java`/`AppTest.java` sur la version JavaFX (Stage + Scene + TestFX).
 
 ```yaml
 stack:

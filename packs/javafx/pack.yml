@@ -15,8 +15,9 @@ description: |
     javafx:run` via VNC en Codespaces ; les tests TestFX, eux, tournent
     en headless sans xvfb).
   - src/main/resources/DarkTheme.css + assets/ (maquettes Codespace).
-  - .devcontainer/devcontainer.json : feature desktop-lite ajoutée +
-    JDK 25-zulu-fx au lieu de 25-zulu.
+  - .devcontainer/devcontainer.json : feature desktop-lite ajoutée (le JDK
+    reste le Zulu STANDARD 25-zulu : un JDK fx-zulu masquerait les jars Maven
+    JavaFX 26 et casserait la Headless Platform des tests).
   - .github/workflows/maven.yml : `./mvnw verify` ; les tests TestFX
     tournent en headless via la Headless Platform JavaFX 26
     (glass.platform=Headless), sans xvfb ni display X11.
