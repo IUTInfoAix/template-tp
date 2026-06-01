@@ -166,6 +166,9 @@ setup() { cd "$TP_DIR"; }
     [ -f .github/workflows/devcontainer.yml ]
     grep -Fq "devcontainers/ci@" .github/workflows/devcontainer.yml
     grep -Fq "schedule:" .github/workflows/devcontainer.yml
+    # Garde anti-build-hebdo dans les repos étudiants (org Classroom *-2026) :
+    # empêche que la condition disparaisse silencieusement d'une édition future.
+    grep -Fq "endsWith(github.repository_owner, '-2026')" .github/workflows/devcontainer.yml
 }
 
 @test "javafx : ./mvnw dependency:tree liste les 4 modules JavaFX (idiomatique)" {
