@@ -34,7 +34,7 @@ permissions:
 jobs:
   build:
     name: build devcontainer (features incl. desktop-lite)
-    # Ne pas tourner dans les forks étudiants (org Classroom suffixée -2026).
+    # Ne pas tourner dans les copies étudiantes (org Classroom suffixée -2026).
     if: ${{ !endsWith(github.repository_owner, '-2026') }}
     runs-on: ubuntu-latest
     steps:

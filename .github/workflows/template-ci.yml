@@ -235,7 +235,10 @@ jobs:
       - name: Install copier + devcontainer CLI
         run: |
           pip install copier pyyaml
-          npm install -g @devcontainers/cli
+          # CLI pinné : ce job détecte la dérive de l'image/des features ; un
+          # CLI non pinné ajouterait une source de dérive qui brouillerait le
+          # signal (faux rouge dû à une nouvelle version cassante du CLI).
+          npm install -g @devcontainers/cli@0.87.0
       - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
         run: |
           rm -rf /tmp/template-source
