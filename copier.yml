@@ -55,6 +55,7 @@ _exclude:
   # maven.yml sont déjà conditionnels via Jinja blocs ; App.java +
   # AppTest.java basculent sur la version JavaFX via if/else.
   - "{% if 'javafx' not in stack.packs %}.devcontainer/Dockerfile{% endif %}"
+  - "{% if 'javafx' not in stack.packs %}.github/workflows/devcontainer.yml{% endif %}"
   - "{% if 'javafx' not in stack.packs %}src/main/resources/DarkTheme.css{% endif %}"
   - "{% if 'javafx' not in stack.packs %}src/main/java/module-info.java{% endif %}"
   # NB : les screenshots Codespace vivent désormais dans .github/assets/

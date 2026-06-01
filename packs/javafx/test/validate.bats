@@ -158,6 +158,16 @@ setup() { cd "$TP_DIR"; }
     ! grep -Fq "java-package: 'jdk+fx'" .github/workflows/maven.yml
 }
 
+@test "javafx : workflow devcontainer.yml présent (build de l'image en CI : base + desktop-lite)" {
+    # Filet contre la dérive externe de l'image de base / des features (ex :
+    # le tag :ubuntu qui a glissé vers Ubuntu 26.04 et cassait desktop-lite).
+    # Le job construit RÉELLEMENT le devcontainer ; déclenché aussi en schedule
+    # hebdo pour attraper une dérive sans changement de config.
+    [ -f .github/workflows/devcontainer.yml ]
+    grep -Fq "devcontainers/ci@" .github/workflows/devcontainer.yml
+    grep -Fq "schedule:" .github/workflows/devcontainer.yml
+}
+
 @test "javafx : ./mvnw dependency:tree liste les 4 modules JavaFX (idiomatique)" {
     # NB: pas de -q (qui supprimerait l'output dependency:tree).
     run bash -c "./mvnw -B -ntp dependency:tree | grep -c openjfx"

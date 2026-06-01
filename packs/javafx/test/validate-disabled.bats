@@ -26,6 +26,10 @@ setup() { cd "$TP_DIR"; }
     [ ! -f .devcontainer/Dockerfile ]
 }
 
+@test "no-javafx : .github/workflows/devcontainer.yml absent" {
+    [ ! -f .github/workflows/devcontainer.yml ]
+}
+
 @test "no-javafx : DarkTheme.css absent" {
     [ ! -f src/main/resources/DarkTheme.css ]
 }

@@ -1,0 +1,47 @@
+# =====================================================================
+# devcontainer.yml : vérifie que l'image du devcontainer se CONSTRUIT.
+#
+# Pourquoi : la CI applicative (maven.yml) tourne sur un runner nu, sans
+# les features du devcontainer (desktop-lite, java...). Une casse de la
+# construction (image de base qui dérive, feature desktop-lite qui change)
+# n'était visible qu'au lancement d'un Codespace. Ce workflow construit
+# réellement l'image avec toutes ses features et lance un smoke-test.
+#
+# Déclencheurs :
+#   - schedule hebdomadaire : attrape la DÉRIVE EXTERNE (base/feature qui
+#     bouge SANS changement de config) : c'est le mode de panne réel.
+#   - push/PR touchant .devcontainer/** : attrape les régressions de config.
+#   - manuel (workflow_dispatch).
+#
+# Le job est neutralisé dans les copies étudiantes (org Classroom *-2026)
+# pour ne pas déclencher des dizaines de builds hebdomadaires : seul le
+# repo enseignant (IUTInfoAix-R20X/tpN) exécute la vérification.
+# =====================================================================
+name: devcontainer
+
+on:
+  push:
+    paths: [".devcontainer/**"]
+  pull_request:
+    paths: [".devcontainer/**"]
+  schedule:
+    - cron: "0 6 * * 1" # lundi 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build devcontainer (features incl. desktop-lite)
+    # Ne pas tourner dans les forks étudiants (org Classroom suffixée -2026).
+    if: ${{ !endsWith(github.repository_owner, '-2026') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build & smoke-test devcontainer
+        uses: devcontainers/ci@v0.3
+        with:
+          # bash -lc pour charger le PATH SDKMAN (Java) comme onCreateCommand.
+          runCmd: bash -lc "./mvnw -q test-compile"
+          push: never
