@@ -215,6 +215,40 @@ jobs:
           TP_DIR: /tmp/tp-no-pack-${{ matrix.pack }}
         run: bats packs/${{ matrix.pack }}/test/validate-disabled.bats
 
+  build-devcontainer:
+    # Construit RÉELLEMENT l'image du devcontainer du pack javafx (base +
+    # features common-utils/java/desktop-lite/github-cli + le RUN du
+    # Dockerfile). Comble l'angle mort : la CI applicative (maven.yml) tourne
+    # sur un runner nu, sans les features, donc une casse de la construction
+    # (base Ubuntu qui dérive, feature desktop-lite qui change) n'était
+    # visible qu'au lancement d'un Codespace. desktop-lite s'installe au
+    # BUILD, donc `devcontainer build` suffit à l'exercer.
+    name: build devcontainer (pack javafx)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install copier + devcontainer CLI
+        run: |
+          pip install copier pyyaml
+          npm install -g @devcontainers/cli
+      - name: Prepare clean template source (clone in /tmp to avoid DirtyLocalWarning)
+        run: |
+          rm -rf /tmp/template-source
+          cp -r . /tmp/template-source && rm -rf /tmp/template-source/.git
+      - name: Generate TP with pack javafx
+        run: |
+          rm -rf /tmp/tp-devcontainer
+          copier copy --trust --vcs-ref=HEAD --defaults \
+            --data-file packs/javafx/test/answers.yml \
+            /tmp/template-source /tmp/tp-devcontainer
+      - name: Build devcontainer image (features incl. desktop-lite)
+        run: devcontainer build --workspace-folder /tmp/tp-devcontainer
+
   test-composition-spotless-with-lint:
     name: composition / pre-commit-spotless + lint-quality
     runs-on: ubuntu-latest
