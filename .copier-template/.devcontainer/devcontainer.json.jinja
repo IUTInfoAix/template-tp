@@ -3,7 +3,9 @@
 {%- if "javafx" in stack.packs %}
     "build": { "dockerfile": "Dockerfile" },
 {%- else %}
-    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+    // LTS épinglée (24.04) plutôt que le tag flottant :ubuntu, qui a glissé vers
+    // 26.04 « Resolute » à sa sortie : build reproductible et déterministe.
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu-24.04",
 {%- endif %}
     "features": {
         "ghcr.io/devcontainers/features/common-utils:2": {
