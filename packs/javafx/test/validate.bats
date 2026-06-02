@@ -41,7 +41,7 @@ setup() { cd "$TP_DIR"; }
     grep -Fq "requires transitive javafx.media;" src/main/java/module-info.java
 }
 
-@test "javafx : pom surefire headless (Headless Platform JavaFX 26) + argLine TestFX complet (8 entrées)" {
+@test "javafx : pom surefire headless (Headless Platform JavaFX 26) + argLine TestFX reduit a ALL-UNNAMED (flags modules nommes retires)" {
     # Le `--` après grep -Fq force grep à traiter le motif comme un argument
     # positionnel, sinon `--add-opens` serait pris pour une option de grep.
     grep -Fq -- "<useModulePath>false</useModulePath>" pom.xml
@@ -49,14 +49,21 @@ setup() { cd "$TP_DIR"; }
     grep -Fq -- "<glass.platform>Headless</glass.platform>" pom.xml
     grep -Fq -- "<prism.order>sw</prism.order>" pom.xml
     grep -Fq -- "<testfx.robot>glass</testfx.robot>" pom.xml
-    grep -Fq -- "--enable-native-access=ALL-UNNAMED" pom.xml
-    grep -Fq -- "--enable-native-access=javafx.graphics" pom.xml
-    grep -Fq -- "--add-reads javafx.graphics=ALL-UNNAMED" pom.xml
-    grep -Fq -- "--add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
-    grep -Fq -- "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" pom.xml
-    grep -Fq -- "--add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
-    grep -Fq -- "--add-exports javafx.graphics/com.sun.javafx.util=ALL-UNNAMED" pom.xml
-    grep -Fq -- "--add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED" pom.xml
+    # En mode classpath (useModulePath=false), seul ALL-UNNAMED est une cible valide :
+    # les flags ciblant des modules nommes declenchaient "WARNING: Unknown module ..." sans effet.
+    grep -Fq -- "<argLine>--enable-native-access=ALL-UNNAMED</argLine>" pom.xml
+    ! grep -Fq -- "--add-reads javafx.graphics=ALL-UNNAMED" pom.xml
+    ! grep -Fq -- "--add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
+    ! grep -Fq -- "--add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED" pom.xml
+    ! grep -Fq -- "--add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED" pom.xml
+    ! grep -Fq -- "--add-exports javafx.graphics/com.sun.javafx.util=ALL-UNNAMED" pom.xml
+    ! grep -Fq -- "--add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED" pom.xml
+}
+
+@test "javafx : .vscode/settings.json definit java.debug.settings.vmArgs (Run/Debug propres : native-access sur tout lancement, pas seulement la config nommee de launch.json)" {
+    grep -Fq -- '"java.debug.settings.vmArgs"' .vscode/settings.json
+    grep -Fq -- "--enable-native-access=ALL-UNNAMED" .vscode/settings.json
+    grep -Fq -- "--enable-native-access=javafx.graphics" .vscode/settings.json
 }
 
 @test "javafx : pom javafx-maven-plugin a jlinkImageName + launcher + options native-access" {

@@ -179,16 +179,11 @@
                         <java.awt.headless>true</java.awt.headless>
                         <testfx.robot>glass</testfx.robot>
                     </systemPropertyVariables>
-                    <argLine>
-                        --enable-native-access=ALL-UNNAMED
-                        --enable-native-access=javafx.graphics
-                        --add-reads javafx.graphics=ALL-UNNAMED
-                        --add-opens javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
-                        --add-opens javafx.base/com.sun.javafx.runtime=ALL-UNNAMED
-                        --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
-                        --add-exports javafx.graphics/com.sun.javafx.util=ALL-UNNAMED
-                        --add-exports javafx.base/com.sun.javafx.logging=ALL-UNNAMED
-                    </argLine>
+                    <!-- Mode classpath (useModulePath=false) : JavaFX charge dans le module *unnamed*.
+                         Les flags ciblant des modules nommes (javafx.graphics, javafx.base) declenchent
+                         "WARNING: Unknown module ..." sans effet. On ne garde que ALL-UNNAMED, qui couvre
+                         l'acces natif du JavaFX headless. -->
+                    <argLine>--enable-native-access=ALL-UNNAMED</argLine>
                 </configuration>
 {%- endif %}
             </plugin>
